@@ -2,6 +2,22 @@
 
 Windows CLI for MiniMax-H3 video.
 
+## Windows installer
+
+GitHub Releases publishes `h3-<version>-windows-x64-setup.exe`. It installs `h3` for the current user and adds it to that user's PATH. Open a new terminal, then:
+
+```
+h3 setup
+h3 download base
+h3 download eros
+h3 doctor
+h3 generate --first-frame still.png --prompt "..." --duration 5 -o clip.mp4
+```
+
+Install `uv` and `ffmpeg` yourself. The installer does not download model weights, and it does not include the NVIDIA interpolate DLLs.
+
+## Build from the clone
+
 Clone this repo and build `h3` from that folder. The binary looks for the engine inside the clone, so leave the folder where you compiled it. If you move the clone, set `GEMMY_REPO_ROOT` to the new path.
 
 ## What you install first

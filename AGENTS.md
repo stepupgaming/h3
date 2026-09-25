@@ -9,6 +9,8 @@ Native Windows CLI for MiniMax-H3 video. Binary name `h3`.
 - `src/video/h3/` owns install, setup, download, doctor, generate, continue, loop, shortfilm, edit, upscale, interpolate, face-refine, sprites, and refmod.
 - `runtimes/minimax-h3/` is the engine (workers, ComfyUI, scripts). Python is `uv` in that tree. `.venv` is local and not committed.
 - `comfy-workflows/` holds compiled H3 video packages plus `materialize.py`.
+- `installer/h3.iss` is the Inno Setup script for the Windows release installer.
+- `.github/workflows/release-windows.yml` builds that installer and publishes it.
 
 # Local Contracts
 
@@ -19,7 +21,8 @@ Native Windows CLI for MiniMax-H3 video. Binary name `h3`.
 - NVIDIA DLSS SDK binaries under the interpolate node stay on the machine. They are gitignored (one DLL is over GitHub's 100 MB limit).
 - Do not commit `.env`, `ComfyUI/extra_model_paths.yaml`, or `ComfyUI/models`.
 - Use `uv`, never `pip`. Native Windows first.
-- Install with `cargo install --path .` from this clone. The binary resolves the engine from the compile-time repo path. `GEMMY_REPO_ROOT` overrides that path.
+- `repo_root()` is `GEMMY_REPO_ROOT` when that variable is set, otherwise the directory that contains `h3.exe` when `runtimes/minimax-h3` is beside it, otherwise the compile-time crate path. `cargo install --path .` keeps the compile-time path. The Windows installer uses the install directory.
+- `.github/workflows/release-windows.yml` builds `installer/h3.iss` on `windows-latest`. A `v*` tag publishes `h3-<version>-windows-x64-setup.exe` to the GitHub Release. `workflow_dispatch` uploads that same installer as an Actions artifact. The installer is per-user, adds `h3` to the user PATH, and does not bundle `.venv`, weights, or the NVIDIA interpolate DLLs.
 
 # Work Guidance
 

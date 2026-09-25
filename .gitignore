@@ -1,4 +1,5 @@
 /target
+/dist
 runtimes/minimax-h3/.venv
 runtimes/minimax-h3/jev-sdk/.venv
 runtimes/minimax-h3/ComfyUI/input

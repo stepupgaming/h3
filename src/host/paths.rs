@@ -4,9 +4,28 @@ use std::process::Command;
 
 pub fn repo_root() -> PathBuf {
     if let Some(root) = std::env::var_os("GEMMY_REPO_ROOT") {
-        return PathBuf::from(root);
+        let path = PathBuf::from(root);
+        if !path.as_os_str().is_empty() {
+            return path;
+        }
+    }
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            if let Some(root) = layout_root(dir) {
+                return root;
+            }
+        }
     }
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+}
+
+/// Install directory when `h3.exe` sits beside `runtimes/minimax-h3`.
+fn layout_root(dir: &Path) -> Option<PathBuf> {
+    if dir.join("runtimes").join("minimax-h3").is_dir() {
+        Some(dir.to_path_buf())
+    } else {
+        None
+    }
 }
 
 pub fn runtime_path(relative: &str) -> PathBuf {
@@ -113,4 +132,22 @@ pub fn find_ffmpeg() -> Result<PathBuf> {
         "ffmpeg.exe not found. Install ffmpeg on PATH, place it at runtimes\\ffmpeg\\bin\\ffmpeg.exe, \
          or set GEMMY_FFMPEG."
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::layout_root;
+    use std::fs;
+
+    #[test]
+    fn layout_root_requires_the_engine_directory() {
+        let root = std::env::temp_dir().join(format!("h3-layout-{}", std::process::id()));
+        let _ = fs::remove_dir_all(&root);
+        fs::create_dir_all(root.join("runtimes").join("minimax-h3")).unwrap();
+        assert_eq!(layout_root(&root).as_deref(), Some(root.as_path()));
+        let bare = root.join("empty");
+        fs::create_dir_all(&bare).unwrap();
+        assert!(layout_root(&bare).is_none());
+        let _ = fs::remove_dir_all(&root);
+    }
 }

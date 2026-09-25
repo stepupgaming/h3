@@ -1,0 +1,8 @@
+This installs the h3 command for the current Windows user.
+
+It does not download model weights. After setup, open a new terminal and run:
+
+  h3 setup
+  h3 download base
+
+uv and ffmpeg must already be on PATH. h3 setup uses uv to create the Python environment.

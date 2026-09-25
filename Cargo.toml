@@ -2,7 +2,7 @@
 name = "h3"
 version = "0.1.0"
 edition = "2024"
-description = "Standalone MiniMax-H3 video CLI cut out of Gemmy"
+description = "Windows CLI for MiniMax-H3 video"
 
 [[bin]]
 name = "h3"

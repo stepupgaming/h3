@@ -2,7 +2,8 @@
 
 use super::args::H3FaceRefineArgs;
 use super::paths::{
-    abs, checkpoints_root, face_refine_worker_script, h3_python, h3_root, resolve_video_vae,
+    abs, checkpoints_root, comfy_root, face_refine_worker_script, h3_python, h3_root,
+    resolve_video_vae,
 };
 use crate::host::gpu::with_gpu_handoff;
 use crate::host::config::H3Config;
@@ -51,6 +52,12 @@ pub(crate) fn run_face_refine(args: H3FaceRefineArgs, _config: &H3Config) -> Res
     }
     if !plan.worker.is_file() {
         bail!("face-refine worker missing: {}", plan.worker.display());
+    }
+    if !plan.node_pack.join("__init__.py").is_file() {
+        bail!(
+            "face-refine pack missing: {}. Run: h3 install",
+            plan.node_pack.display()
+        );
     }
     if let Some(parent) = plan.output.parent() {
         std::fs::create_dir_all(parent)
@@ -133,8 +140,7 @@ fn build_plan(args: &H3FaceRefineArgs) -> Result<FaceRefinePlan> {
             absolute_path(&parent.join(format!("{stem}_face.mp4")))?
         }
     };
-    let node_pack = h3_root()
-        .join("ComfyUI")
+    let node_pack = comfy_root()
         .join("custom_nodes")
         .join("ComfyUI-H3-FaceRefine");
     Ok(FaceRefinePlan {

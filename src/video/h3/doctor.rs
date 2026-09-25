@@ -274,24 +274,22 @@ print(json.dumps(report))
                 }
             }
             let optional_nodes = [
-                ("ComfyUI-H3-FaceRefine", "optional face-refine pack"),
-                (
-                    "Comfyui_Minimax_h3_latent_Upscaler",
-                    "optional 3D latent upscaler",
-                ),
-                (
-                    "ComfyUI-H3-Motion-Context",
-                    "optional Motion Context pack (continuous FL2VA speech; GPL local clone, v0.3.1)",
-                ),
-                (
-                    "ComfyUI-MiniMax-H3-009jev",
-                    "optional 009jev pack (H3JevNativeSLAPatch; GPL; --jev / --sla-fixed, not default generate)",
-                ),
+                ("ComfyUI-H3-FaceRefine", true),
+                ("Comfyui_Minimax_h3_latent_Upscaler", true),
+                ("ComfyUI-H3-Motion-Context", false),
+                ("ComfyUI-MiniMax-H3-009jev", false),
             ];
-            for (name, role) in optional_nodes {
+            for (name, installed_by_h3) in optional_nodes {
                 let dir = croot.join("custom_nodes").join(name);
-                if !dir.is_dir() {
-                    notes.push(format!("{role} not installed ({name}) — not required for generate"));
+                if dir.is_dir() {
+                    continue;
+                }
+                if installed_by_h3 {
+                    notes.push(format!("{name} is not installed. Run: h3 install"));
+                } else {
+                    notes.push(format!(
+                        "{name} is not installed. It is not used by the default generate path."
+                    ));
                 }
             }
             let jev_sdk = super::paths::jev_sdk_python();

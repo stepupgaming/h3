@@ -97,16 +97,26 @@ impl WorkerSpec {
         } else {
             None
         };
-        if let Err(error) = process_tree.assign(&child) {
-            let _ = child.kill();
-            let _ = child.wait();
-            return Err(error).with_context(|| {
-                format!("assign {} to Windows Job Object", self.label)
-            });
-        }
+        let process_tree = match process_tree.assign(&child) {
+            Ok(()) => Some(process_tree),
+            Err(error) => {
+                // The setup exe already runs inside a job. A second job is
+                // refused there. The child keeps running; parent-death kill is
+                // the only thing we lose.
+                eprintln!(
+                    "[{}] continuing without a job object ({error:#})",
+                    self.label
+                );
+                None
+            }
+        };
         let status = loop {
             crate::host::workers::env::check_supervisor_cancel_signal().map_err(|error| {
-                let _ = process_tree.terminate(0xC000_013A);
+                if let Some(tree) = process_tree.as_ref() {
+                    let _ = tree.terminate(0xC000_013A);
+                } else {
+                    let _ = child.kill();
+                }
                 let _ = child.wait();
                 error
             })?;
@@ -114,13 +124,17 @@ impl WorkerSpec {
                 Ok(Some(status)) => break status,
                 Ok(None) => std::thread::sleep(Duration::from_millis(50)),
                 Err(error) => {
-                    let _ = process_tree.terminate(0xC000_013A);
+                    if let Some(tree) = process_tree.as_ref() {
+                        let _ = tree.terminate(0xC000_013A);
+                    } else {
+                        let _ = child.kill();
+                    }
                     let _ = child.wait();
                     return Err(error).with_context(|| format!("poll {}", self.label));
                 }
             }
         };
-        // Drop process_tree after wait so kill-on-close does not race a clean exit.
+        // Drop the job after wait so kill-on-close does not race a clean exit.
         drop(process_tree);
         if let Some(forwarder) = stdout_forwarder {
             let _ = forwarder.join();

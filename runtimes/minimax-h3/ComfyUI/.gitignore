@@ -7,8 +7,8 @@ __pycache__/
 /temp/
 # Gemmy H3: pin packs under custom_nodes/ ARE tracked (product engine).
 # Ignore only non-product noise inside that tree.
-# Optional local-only packs — never vendor (LBH node repo has no LICENSE;
-# Motion Context is GPL-3.0, same bar as Context Loop).
+# Fetched by h3 install, not committed. Latent upscaler node repo has no LICENSE.
+# Motion Context is GPL-3.0. FaceRefine is MIT and is also fetched at install.
 custom_nodes/ComfyUI-H3-FaceRefine/
 custom_nodes/Comfyui_Minimax_h3_latent_Upscaler/
 custom_nodes/ComfyUI-H3-Motion-Context/

@@ -1,9 +1,9 @@
 //! `h3 setup` — checkpoints folder and Comfy pack.
 //!
-//! The bundled pack under `runtimes/minimax-h3/ComfyUI` is the one that runs
-//! these graphs. Pointing at another folder works only when that folder already
-//! contains `run_h3_workflow.py` and `custom_nodes/gemmy-h3-context`. A stock
-//! Comfy Portable tree does not.
+//! The bundled pack under `runtimes/minimax-h3/ComfyUI` is filled in by
+//! `h3 install` (Python env, product node packs, weights). `--comfy` points at
+//! an existing ComfyUI folder: this command copies the H3 runner and shipped
+//! nodes into it, then downloads any product pack that folder does not have.
 
 use super::args::H3SetupArgs;
 use super::download::{self, copy_bundled_tokenizer};
@@ -53,15 +53,14 @@ pub(crate) fn run_setup(args: H3SetupArgs, config: &H3Config) -> Result<()> {
     }
     if let Some(path) = &args.comfy {
         let path = absolute_path(path)?;
+        let path = super::install::prepare_comfy_folder(&path, args.verbose, !args.no_runtime)?;
         let problems = comfy_pack_problems(&path);
         if !problems.is_empty() {
             bail!(
-                "that folder is not this H3 Comfy pack:\n  {}\n\
-                 A stock Comfy or Comfy Portable install does not include the runner or nodes.\n\
-                 Use the bundled pack: h3 setup --comfy-bundled\n\
-                 Bundled path: {}",
+                "could not prepare that Comfy folder:\n  {}\n\
+                 Bundled pack: {}",
                 problems.join("\n  "),
-                h3_root().join("ComfyUI").display()
+                super::install::bundled_comfy().display()
             );
         }
         setup.comfy = Some(path);
@@ -110,6 +109,11 @@ pub(crate) fn run_setup(args: H3SetupArgs, config: &H3Config) -> Result<()> {
         notes.push("skipped uv sync (--no-runtime)".into());
     } else if h3_python().is_file() {
         notes.push(format!("python already present: {}", h3_python().display()));
+    }
+
+    if !args.no_runtime {
+        super::install::ensure_product_nodes(&comfy, args.verbose, false)?;
+        notes.push("product node packs present".into());
     }
 
     if problems.is_empty() {

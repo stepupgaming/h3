@@ -184,6 +184,32 @@ fn catalog() -> &'static [WeightSet] {
                 root: WeightRoot::Checkpoints,
             }],
         },
+        WeightSet {
+            id: "latent",
+            title: "latent upscaler",
+            about: "3D latent-upscaler weights for `h3 upscale --backend latent` (Apache-2.0)",
+            copy_tokenizer: false,
+            files: &[WeightFile {
+                repo: "LBH-123-AI/Minimax_h3_latent_Upscaler",
+                filename: "minimax_h3_latent_upscaler_3d_conv_v1/minimax_h3_latent_upscaler_3d_conv_v1_bf16.safetensors",
+                rel: "latent_upscale_models/minimax_h3_latent_upscaler_3d_conv_v1_bf16.safetensors",
+                bytes: 690_592_992,
+                root: WeightRoot::Checkpoints,
+            }],
+        },
+        WeightSet {
+            id: "face",
+            title: "face detector",
+            about: "YOLOv8 face weights for `h3 face-refine`",
+            copy_tokenizer: false,
+            files: &[WeightFile {
+                repo: "Bingsu/adetailer",
+                filename: "face_yolov8m.pt",
+                rel: "ultralytics/bbox/face_yolov8m.pt",
+                bytes: 52_026_019,
+                root: WeightRoot::Checkpoints,
+            }],
+        },
     ]
 }
 
@@ -218,6 +244,26 @@ fn file_ready(path: &Path, bytes: u64) -> bool {
     std::fs::metadata(path).map(|m| m.len() == bytes).unwrap_or(false)
 }
 
+/// Canonical path, or the older on-disk name for the same latent-upscaler bytes.
+fn existing_weight(file: &WeightFile) -> Option<PathBuf> {
+    let dest = root_dir(file.root).join(file.rel);
+    if file_ready(&dest, file.bytes) {
+        return Some(dest);
+    }
+    if file
+        .rel
+        .ends_with("minimax_h3_latent_upscaler_3d_conv_v1_bf16.safetensors")
+    {
+        let legacy = dest
+            .parent()?
+            .join("minimax_h3_latent_upscaler_3d_bf16.safetensors");
+        if file_ready(&legacy, file.bytes) {
+            return Some(legacy);
+        }
+    }
+    None
+}
+
 #[derive(Serialize)]
 pub(crate) struct FileStatus {
     repo: String,
@@ -245,11 +291,15 @@ pub(crate) fn set_statuses() -> Vec<SetStatus> {
                 .iter()
                 .map(|file| {
                     let dest = root_dir(file.root).join(file.rel);
+                    let present = existing_weight(file);
                     FileStatus {
                         repo: file.repo.to_string(),
-                        dest: dest.display().to_string(),
+                        dest: present
+                            .as_ref()
+                            .map(|p| p.display().to_string())
+                            .unwrap_or_else(|| dest.display().to_string()),
                         bytes: file.bytes,
-                        present: file_ready(&dest, file.bytes),
+                        present: present.is_some(),
                         url: hf_url(file.repo, file.filename),
                     }
                 })
@@ -332,8 +382,8 @@ pub(crate) fn copy_bundled_tokenizer() -> Result<bool> {
 fn fetch_file(file: &WeightFile, verbose: bool, dry_run: bool) -> Result<()> {
     let dest = root_dir(file.root).join(file.rel);
     let url = hf_url(file.repo, file.filename);
-    if file_ready(&dest, file.bytes) {
-        println!("[{LABEL}] present {}", dest.display());
+    if let Some(found) = existing_weight(file) {
+        println!("[{LABEL}] present {}", found.display());
         return Ok(());
     }
     if dry_run {
@@ -393,29 +443,13 @@ pub(crate) fn run_download(args: H3DownloadArgs) -> Result<()> {
         };
         chosen.push(set);
     }
+    fetch_sets(
+        &chosen.iter().map(|set| set.id).collect::<Vec<_>>(),
+        args.verbose,
+        args.dry_run,
+    )?;
     if args.dry_run {
-        for set in &chosen {
-            println!("[{LABEL}] set {} — {}", set.id, set.about);
-            for file in set.files {
-                fetch_file(file, args.verbose, true)?;
-            }
-            if set.copy_tokenizer {
-                println!(
-                    "[{LABEL}] dry-run copy tokenizer → {}",
-                    tokenizer_dest().display()
-                );
-            }
-        }
         return Ok(());
-    }
-    for set in &chosen {
-        println!("[{LABEL}] set {} — {}", set.id, set.about);
-        if set.copy_tokenizer {
-            copy_bundled_tokenizer()?;
-        }
-        for file in set.files {
-            fetch_file(file, args.verbose, false)?;
-        }
     }
     match super::paths::write_comfy_extra_model_paths() {
         Ok(path) => println!("[{LABEL}] wrote {}", path.display()),
@@ -423,6 +457,33 @@ pub(crate) fn run_download(args: H3DownloadArgs) -> Result<()> {
             "[{LABEL}] note: extra_model_paths.yaml not written ({err:#}). Comfy root: {}",
             comfy_root().display()
         ),
+    }
+    Ok(())
+}
+
+pub(crate) fn fetch_sets(ids: &[&str], verbose: bool, dry_run: bool) -> Result<()> {
+    let known: Vec<&str> = catalog().iter().map(|set| set.id).collect();
+    for name in ids {
+        let Some(set) = catalog().iter().find(|set| set.id == *name) else {
+            bail!(
+                "unknown weight set `{name}`. Choose one of: {}",
+                known.join(", ")
+            );
+        };
+        println!("[{LABEL}] set {} — {}", set.id, set.about);
+        if set.copy_tokenizer {
+            if dry_run {
+                println!(
+                    "[{LABEL}] dry-run copy tokenizer → {}",
+                    tokenizer_dest().display()
+                );
+            } else {
+                copy_bundled_tokenizer()?;
+            }
+        }
+        for file in set.files {
+            fetch_file(file, verbose, dry_run)?;
+        }
     }
     Ok(())
 }
@@ -450,5 +511,7 @@ mod tests {
         assert!(ids.contains(&"base"));
         assert!(ids.contains(&"eros"));
         assert!(ids.contains(&"eros-bf16"));
+        assert!(ids.contains(&"latent"));
+        assert!(ids.contains(&"face"));
     }
 }

@@ -15,9 +15,9 @@ pub(crate) struct H3Args {
 
 #[derive(Subcommand, Debug)]
 pub(crate) enum H3Command {
-    /// Ensure runtimes/minimax-h3 uv env is ready (does not download multi-GB weights).
+    /// Python env, ffmpeg, product node packs, and base/eros/latent/face weights.
     Install(H3InstallArgs),
-    /// Choose the checkpoints folder and the Comfy pack (bundled, or a folder that already has this runner).
+    /// Choose the checkpoints folder, or point at a ComfyUI folder (main.py).
     Setup(H3SetupArgs),
     /// List or download weight sets (base, eros, ref2va-stock, singularity, turbo, …).
     Download(H3DownloadArgs),

@@ -84,11 +84,11 @@ jobs:
           @(
             "Windows installer for h3 ${{ steps.version.outputs.version }}.",
             "",
-            "Run the setup exe. It installs h3 for the current user and adds it to that user's PATH. Open a new terminal, then:",
+            "Run the setup exe. It installs h3 for the current user, adds it to that user's PATH, and runs h3 install.",
+            "That step creates the Python environment, installs ffmpeg if needed, downloads the product node packs, and downloads the base, eros, latent, and face weight sets.",
+            "Open a new terminal, then:",
             "",
-            "    h3 setup",
-            "    h3 download base",
-            "",
-            "Install uv and ffmpeg separately. The installer does not download model weights."
+            "    h3 doctor",
+            "    h3 generate --first-frame still.png --prompt ""..."" --duration 5 -o clip.mp4"
           ) | Set-Content -Path $notesPath -Encoding utf8
           gh release create "${{ github.ref_name }}" $exe.FullName --title "${{ github.ref_name }}" --notes-file $notesPath

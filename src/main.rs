@@ -28,6 +28,14 @@ fn main() -> ExitCode {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
             eprintln!("h3: {error:#}");
+            let args: Vec<String> = std::env::args().skip(1).collect();
+            if args.iter().any(|arg| arg == "install") {
+                if let Ok(exe) = std::env::current_exe() {
+                    if let Some(dir) = exe.parent() {
+                        let _ = std::fs::write(dir.join("install.log"), format!("h3: {error:#}\n"));
+                    }
+                }
+            }
             ExitCode::from(1)
         }
     }

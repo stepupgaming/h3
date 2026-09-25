@@ -4,17 +4,18 @@ Windows CLI for MiniMax-H3 video.
 
 ## Windows installer
 
-GitHub Releases publishes `h3-<version>-windows-x64-setup.exe`. It installs `h3` for the current user and adds it to that user's PATH. Open a new terminal, then:
+GitHub Releases publishes `h3-<version>-windows-x64-setup.exe`. It installs `h3` for the current user, adds it to that user's PATH, and then runs `h3 install`. That step installs `uv` and `ffmpeg` if they are missing, creates the Python environment, downloads the product Comfy node packs, and downloads the `base`, `eros`, `latent`, and `face` weight sets. The console stays open while those files download. Open a new terminal, then:
 
 ```
-h3 setup
-h3 download base
-h3 download eros
 h3 doctor
 h3 generate --first-frame still.png --prompt "..." --duration 5 -o clip.mp4
 ```
 
-Install `uv` and `ffmpeg` yourself. The installer does not download model weights, and it does not include the NVIDIA interpolate DLLs.
+If you already have ComfyUI, point h3 at that folder. Setup copies the H3 runner and shipped nodes into it and downloads any product pack that is missing:
+
+```
+h3 setup --comfy C:\path\to\ComfyUI
+```
 
 ## Build from the clone
 
@@ -22,34 +23,35 @@ Clone this repo and build `h3` from that folder. The binary looks for the engine
 
 ## What you install first
 
-- Rust (`cargo`)
-- `uv` on `PATH`
-- `ffmpeg` on `PATH`
+- Rust (`cargo`), if you are building from the clone
 - an NVIDIA driver
 
-The Comfy pack is already in `runtimes\minimax-h3\ComfyUI`. Setup does not download Comfy. Download does not install Comfy.
+`h3 install` installs `uv` and `ffmpeg` when they are not already on the machine. The Comfy pack is in `runtimes\minimax-h3\ComfyUI`. `h3 install` fills in the Python environment, the latent-upscaler and face-refine node packs, and the weight files.
 
 ## First clip
 
 ```
 cargo install --path .
-h3 setup --checkpoints D:\h3-models
-h3 download --list
-h3 download base
-h3 download eros
+h3 install
 h3 doctor
 h3 generate --first-frame still.png --prompt "..." --duration 5 -o clip.mp4
 ```
 
-`h3 setup` writes `%APPDATA%\h3\config.json` and syncs the Python env with `uv` when it is missing.
+`h3 setup` writes `%APPDATA%\h3\config.json` when you choose a checkpoints folder or point at an existing ComfyUI.
 
-`base` is the image-to-video and text-to-video set. `eros` is the default reference-to-video model. Other sets are optional: `vae-fp16`, `eros-bf16`, `ref2va-stock`, `singularity`, `turbo`, `realism`, `vsa`. `h3 download --dry-run base` prints URLs and destinations. A gated Hugging Face repo needs `HF_TOKEN`.
+`h3 install` downloads `base` (image-to-video and text-to-video), `eros` (reference-to-video), `latent` (`h3 upscale --backend latent`), and `face` (`h3 face-refine`). Other sets stay opt-in: `vae-fp16`, `eros-bf16`, `ref2va-stock`, `singularity`, `turbo`, `realism`, `vsa`. `h3 download --list` prints them. `h3 download --dry-run base` prints URLs and destinations. A gated Hugging Face repo needs `HF_TOKEN`. Running `h3 install` again skips files that are already the right size.
 
 Image-to-video takes `--first-frame`. Text-to-video is `h3 generate --mode t2va`.
 
 ## Comfy
 
-Use the pack in this repo. `h3 setup --comfy` accepts another folder only when that folder already has `run_h3_workflow.py` and `custom_nodes\gemmy-h3-context`. A stock Comfy Portable install does not run these graphs, and this CLI does not attach to a Comfy process you already have open.
+Use the pack in this repo, or point at a ComfyUI folder you already have:
+
+```
+h3 setup --comfy C:\path\to\ComfyUI
+```
+
+That copies the H3 runner and the shipped node packs into that folder and downloads the latent-upscaler and face-refine packs if they are not there. This CLI does not attach to a Comfy process you already have open.
 
 ## Commands
 

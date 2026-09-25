@@ -73,12 +73,12 @@
     {
       "name": "Comfyui_Minimax_h3_latent_Upscaler",
       "repo": "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler",
-      "role": "Optional 3D latent spatial SR for gemmy video h3 upscale --backend latent. Node repo has no LICENSE; weights are Apache-2.0 (HF LBH-123-AI/Minimax_h3_latent_Upscaler). Doctor-notes only."
+      "role": "3D latent spatial SR for h3 upscale --backend latent. h3 install downloads this commit into custom_nodes (the node repo has no LICENSE, so it is not committed). Weights are Apache-2.0 via h3 download latent."
     },
     {
       "name": "ComfyUI-H3-FaceRefine",
       "repo": "https://github.com/Carasibana/ComfyUI-H3-FaceRefine",
-      "role": "Optional MIT FaceRefine post for gemmy video h3 face-refine. Detector face_yolov8m.pt (Bingsu/adetailer). Doctor-notes only."
+      "role": "MIT FaceRefine post for h3 face-refine. h3 install downloads this commit into custom_nodes. Detector face_yolov8m.pt is h3 download face (Bingsu/adetailer)."
     },
     {
       "name": "ComfyUI-H3-Motion-Context",

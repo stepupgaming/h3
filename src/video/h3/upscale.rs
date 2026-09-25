@@ -253,6 +253,7 @@ pub(crate) fn run_upscale(args: H3UpscaleArgs, _config: &H3Config) -> Result<()>
     println!("[h3 upscale] unloading Gemmy before upscale...");
 
     if args.backend.is_latent() {
+        check_latent_backend(&plan)?;
         return run_latent_upscale(&args, &plan);
     }
 
@@ -547,8 +548,8 @@ fn build_plan(args: &H3UpscaleArgs) -> Result<UpscalePlan> {
     })
 }
 
-fn latent_pack_dirs(h3_root: &std::path::Path) -> Vec<PathBuf> {
-    let nodes = h3_root.join("ComfyUI").join("custom_nodes");
+fn latent_pack_dirs(_h3_root: &std::path::Path) -> Vec<PathBuf> {
+    let nodes = super::paths::comfy_root().join("custom_nodes");
     vec![
         nodes.join("Comfyui_Minimax_h3_latent_Upscaler"),
         nodes.join("ComfyUI_Minimax_h3_latent_Upscaler"),
@@ -566,8 +567,8 @@ fn check_latent_backend(plan: &UpscalePlan) -> Result<()> {
             Ok(())
         }
         None => bail!(
-            "latent upscaler pack missing under {}\\ComfyUI\\custom_nodes\\Comfyui_Minimax_h3_latent_Upscaler",
-            plan.h3_root.display()
+            "latent upscaler pack missing under {}\\custom_nodes\\Comfyui_Minimax_h3_latent_Upscaler. Run: h3 install",
+            super::paths::comfy_root().display()
         ),
     }
 }

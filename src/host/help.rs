@@ -39,21 +39,20 @@ Code (in this repo):
     gemmy_h3_generate.py         # --engine python
   Dev overrides only: GEMMY_H3_ROOT / GEMMY_H3_COMFY
 Weights (external multi-GB — never in git):
+  h3 install
+  downloads base, eros, latent, and face. h3 download --list shows the rest.
   h3 setup --checkpoints D:\h3-models
-  h3 download --list
-  h3 download base
-  h3 download eros
   Saved roots: %APPDATA%\h3\config.json.
   Env GEMMY_H3_CHECKPOINTS still wins. An existing F:\Models\minimax-h3-eros
   or G:\Models\minimax-h3-backup is kept when you have not set a path.
   Comfy: bundled runtimes\minimax-h3\ComfyUI, or
-  h3 setup --comfy <folder that already has run_h3_workflow.py>.
-  A stock Comfy Portable tree does not run these graphs.
+  h3 setup --comfy <folder with main.py>.
+  That copies the H3 runner and shipped nodes, then downloads missing product packs.
   turbo LoRA: checkpoints\loras\minimax_h3_turbo_v4_step600_ema.safetensors
   realism LoRA: checkpoints\loras\h3-realism-people-t2v-i2v-r2v.safetensors (trigger r34l1sm)
 
 Lifecycle:
-  h3 install          uv sync runtimes\minimax-h3 (weights not downloaded)
+  h3 install          Python env, ffmpeg, product node packs, and base/eros/latent/face weights
   h3 setup            choose checkpoints folder and Comfy pack
   h3 download         list or fetch weight sets (base, eros, ref2va-stock, …)
   h3 verify           required scripts + weight files present

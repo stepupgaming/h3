@@ -1,9 +1,12 @@
-h3 is installed. Open a new terminal so PATH picks it up, then:
+h3 is installed and the setup step has run.
 
-  h3 setup
-  h3 download base
-  h3 download eros
+Open a new terminal so PATH picks it up, then:
+
   h3 doctor
   h3 generate --first-frame still.png --prompt "..." --duration 5 -o clip.mp4
 
-uv and ffmpeg are separate installs. Model weights are fetched by h3 download.
+If you already have ComfyUI, point h3 at that folder:
+
+  h3 setup --comfy C:\path\to\ComfyUI
+
+Weights live outside the install folder. h3 install can be run again; files already on disk are skipped.

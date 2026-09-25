@@ -1,5 +1,5 @@
 #ifndef AppVersion
-#define AppVersion "0.1.0"
+#define AppVersion "0.1.1"
 #endif
 
 [Setup]
@@ -29,7 +29,7 @@ CloseApplications=no
 Source: "..\target\release\h3.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\README.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\comfy-workflows\*"; DestDir: "{app}\comfy-workflows"; Flags: ignoreversion recursesubdirs; Excludes: "node_modules\*,*\node_modules\*,.git\*"
-Source: "..\runtimes\minimax-h3\*"; DestDir: "{app}\runtimes\minimax-h3"; Flags: ignoreversion recursesubdirs; Excludes: ".venv\*,*\.venv\*,__pycache__\*,*\__pycache__\*,*.pyc,.git\*,ComfyUI\extra_model_paths.yaml,ComfyUI\models\*,ComfyUI\input\*,ComfyUI\output\*,ComfyUI\temp\*,ComfyUI\user\*,ComfyUI\custom_nodes\ComfyUI-NVIDIA-DLSS-Frame-Interpolation\bin\runtime\*,ComfyUI\custom_nodes\ComfyUI-NVIDIA-DLSS-Frame-Interpolation\Assets\*.mp4"
+Source: "..\runtimes\minimax-h3\*"; DestDir: "{app}\runtimes\minimax-h3"; Flags: ignoreversion recursesubdirs; Excludes: ".venv\*,*\.venv\*,__pycache__\*,*\__pycache__\*,*.pyc,.git\*,ComfyUI\extra_model_paths.yaml,ComfyUI\models\*,ComfyUI\input\*,ComfyUI\output\*,ComfyUI\temp\*,ComfyUI\user\*,ComfyUI\custom_nodes\ComfyUI-NVIDIA-DLSS-Frame-Interpolation\bin\runtime\*,ComfyUI\custom_nodes\ComfyUI-NVIDIA-DLSS-Frame-Interpolation\Assets\*.mp4,ComfyUI\custom_nodes\Comfyui_Minimax_h3_latent_Upscaler\*,ComfyUI\custom_nodes\ComfyUI-H3-FaceRefine\*,ComfyUI\custom_nodes\ComfyUI-H3-Motion-Context\*"
 
 [Tasks]
 Name: addtopath; Description: "Add h3 to the user PATH"; GroupDescription: "Options:"; Flags: checkedonce
@@ -102,10 +102,31 @@ begin
   WriteUserPath(DeletePathSegment(Paths, AppPath));
 end;
 
+procedure RunH3Install();
+var
+  ResultCode: Integer;
+begin
+  if not Exec(ExpandConstant('{app}\h3.exe'), 'install', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+  begin
+    MsgBox('h3 install could not be started.', mbError, MB_OK);
+    Abort;
+  end;
+  if ResultCode <> 0 then
+  begin
+    if not WizardSilent then
+      MsgBox('h3 install did not finish. See ' + ExpandConstant('{app}\install.log') + ' and the console window. Run h3 install again after it is fixed.', mbError, MB_OK);
+    Abort;
+  end;
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  if (CurStep = ssPostInstall) and WizardIsTaskSelected('addtopath') then
-    AddInstallDirToPath();
+  if CurStep = ssPostInstall then
+  begin
+    if WizardIsTaskSelected('addtopath') then
+      AddInstallDirToPath();
+    RunH3Install();
+  end;
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
@@ -122,3 +143,5 @@ Type: filesandordirs; Name: "{app}\runtimes\minimax-h3\ComfyUI\output"
 Type: filesandordirs; Name: "{app}\runtimes\minimax-h3\ComfyUI\temp"
 Type: filesandordirs; Name: "{app}\runtimes\minimax-h3\ComfyUI\user"
 Type: files; Name: "{app}\runtimes\minimax-h3\ComfyUI\extra_model_paths.yaml"
+Type: filesandordirs; Name: "{app}\runtimes\minimax-h3\ComfyUI\custom_nodes\Comfyui_Minimax_h3_latent_Upscaler"
+Type: filesandordirs; Name: "{app}\runtimes\minimax-h3\ComfyUI\custom_nodes\ComfyUI-H3-FaceRefine"

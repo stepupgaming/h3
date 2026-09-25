@@ -1,0 +1,34 @@
+{
+  "name": "@stepupgaming/comfy-workflow-h3-face-refine",
+  "version": "0.1.1",
+  "description": "Track/crop faces, H3 denoise 0.35, stitch back. Gemmy `video h3 face-refine`.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "comfy-workflow",
+    "comfyui",
+    "comfy-workflows"
+  ],
+  "comfyWorkflow": "./comfy.workflow.json",
+  "files": [
+    "README.md",
+    "comfy.workflow.json",
+    "ir.build.ts",
+    "prompt.template.json",
+    "workflow.ir.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@stepupgaming/comfy-workflows": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stepupgaming/gemmy.git",
+    "directory": "comfy-workflows/comfy-workflow-h3-face-refine"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

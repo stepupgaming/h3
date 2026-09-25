@@ -1,0 +1,27 @@
+{
+  "name": "@stepupgaming/comfy-workflow-h3-singularity-decode",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Singularity process 4: VAE decode only. Not the Eros default. Not published.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "comfy-workflow",
+    "comfyui",
+    "comfy-workflows"
+  ],
+  "comfyWorkflow": "./comfy.workflow.json",
+  "files": [
+    "README.md",
+    "ir.build.ts",
+    "workflow.ir.json",
+    "comfy.workflow.json",
+    "prompt.template.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@stepupgaming/comfy-workflows": "^0.2.0"
+  }
+}

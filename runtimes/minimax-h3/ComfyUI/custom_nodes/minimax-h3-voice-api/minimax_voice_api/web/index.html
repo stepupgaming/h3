@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#11110f">
+  <title>Vox Atelier · MiniMax H3</title>
+  <link rel="stylesheet" href="/studio-assets/app.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Vox Atelier home">
+        <span class="brand-mark"><i></i><i></i><i></i><i></i><i></i></span>
+        <span><strong>Vox Atelier</strong><small>MiniMax H3 voice studio</small></span>
+      </a>
+      <div class="top-actions">
+        <div class="system-pill" id="systemPill"><span class="status-dot"></span><span id="systemText">Connecting</span></div>
+        <button class="icon-button mobile-voices" id="openVoices" aria-label="Choose a voice">Voices</button>
+        <button class="button ghost" id="openEnroll">＋ Add voice</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="voice-panel" id="voicePanel">
+        <div class="panel-head">
+          <div><p class="eyebrow">The cast</p><h2>Choose a voice</h2></div>
+          <button class="icon-button close-panel" id="closeVoices" aria-label="Close voices">×</button>
+        </div>
+        <label class="search-box">
+          <span>⌕</span>
+          <input id="voiceSearch" type="search" placeholder="Search voices or styles…" autocomplete="off">
+        </label>
+        <div class="filter-row" id="voiceFilters">
+          <button class="filter active" data-filter="all">All</button>
+          <button class="filter" data-filter="female">Women</button>
+          <button class="filter" data-filter="male">Men</button>
+          <button class="filter" data-filter="custom">Custom</button>
+        </div>
+        <div class="voice-count" id="voiceCount">Loading cast…</div>
+        <div class="voice-list" id="voiceList"></div>
+      </aside>
+
+      <section class="studio">
+        <div class="studio-intro">
+          <div>
+            <p class="eyebrow">Performance desk</p>
+            <h1>Give the words<br><em>a pulse.</em></h1>
+          </div>
+          <p class="intro-copy">Direct a performance, place it in a room, and let H3 build a voice that feels present.</p>
+        </div>
+
+        <div class="creation-switch" id="creationSwitch">
+          <button class="active" data-creation="voice"><span>◉</span> Voice</button>
+          <button data-creation="music"><span>♫</span> Music</button>
+          <button data-creation="sfx"><span>⚡</span> SFX</button>
+        </div>
+
+        <div id="voiceStudio">
+          <div class="selected-voice-card" id="selectedVoiceCard">
+          <div class="voice-avatar large" id="selectedAvatar">VA</div>
+          <div class="selected-copy">
+            <span class="micro-label">Selected voice</span>
+            <h3 id="selectedName">Loading…</h3>
+            <p id="selectedDescription">Fetching the voice catalog.</p>
+          </div>
+          <button class="button compact" id="changeVoice">Change</button>
+        </div>
+
+          <div class="composer-card">
+          <div class="composer-tabs">
+            <button class="composer-tab active" data-mode="catalog">Voice catalog</button>
+            <button class="composer-tab" data-mode="described">Describe a voice</button>
+          </div>
+
+          <div class="described-box hidden" id="describedBox">
+            <label for="voiceDescription">Voice identity</label>
+            <input id="voiceDescription" type="text" placeholder="e.g. A warm, grounded woman in her thirties with a subtle Irish accent…">
+            <small>A stable voice is created and cached from this description.</small>
+          </div>
+
+          <label class="text-label" for="scriptText"><span>Script</span><span id="wordCount">0 words</span></label>
+          <textarea id="scriptText" rows="8" placeholder="Write what you want the voice to say…">You went quiet again. I don't mind. I can stay here and notice the things you don't say.</textarea>
+
+          <div class="prompt-strip">
+            <span>Try</span>
+            <button class="prompt-chip" data-prompt="warm">Warm hello</button>
+            <button class="prompt-chip" data-prompt="dramatic">Dramatic</button>
+            <button class="prompt-chip" data-prompt="playful">Playful</button>
+            <button class="prompt-chip" data-prompt="long">Long-form</button>
+          </div>
+
+          <div class="controls-grid">
+            <label class="field full-span"><span>Voice engine</span>
+              <select id="speechMode">
+                <option value="reference" selected>Ref2VA · verified exact voice</option>
+                <option value="continuous">Continuous FL2VA · experimental</option>
+              </select>
+              <small id="speechModeNote">Uses the selected reference on every chunk and rejects raw takes containing any words outside the script.</small>
+            </label>
+            <label class="field"><span>Emotion</span><select id="emotion"></select></label>
+            <label class="field"><span>Acoustic space</span>
+              <select id="space">
+                <option value="close">Close · beside you</option>
+                <option value="studio">Studio · clean</option>
+                <option value="across_table">Across a table</option>
+                <option value="living_room">Living room</option>
+                <option value="bedside">Bedside · intimate</option>
+                <option value="stage">Stage · projected</option>
+              </select>
+            </label>
+            <label class="field intensity-field"><span>Intensity <b id="intensityValue">55%</b></span><input id="intensity" type="range" min="0" max="100" value="55"></label>
+            <label class="field"><span>Output</span>
+              <select id="format"><option value="flac">FLAC · lossless</option><option value="mp3">MP3</option><option value="wav">WAV</option><option value="opus">Opus</option><option value="aac">AAC</option></select>
+            </label>
+          </div>
+
+          <details class="advanced">
+            <summary>Performance direction <span>Optional</span></summary>
+            <div class="advanced-body">
+              <label class="field full"><span>Acting notes</span><textarea id="direction" rows="3">nuanced realistic professional acting, speaking naturally to one nearby person, with connected phrasing and no TTS cadence</textarea></label>
+              <div class="mini-grid">
+                <label class="field"><span>Steps</span><select id="steps"><option>20</option><option selected>30</option><option>40</option><option>50</option></select></label>
+                <label class="field"><span>Resolution</span><select id="resolution"><option selected>32</option><option>64</option><option>128</option></select></label>
+                <label class="field"><span>Voice memory</span><select id="contextSeconds"><option value="1">1 second</option><option value="3">3 seconds</option><option value="5">5 seconds</option><option value="10" selected>10 seconds</option></select></label>
+                <label class="field"><span>Candidate pool</span><select id="candidatePool"><option value="1" selected>1 accepted take</option><option value="2">Best of 2</option><option value="3">Best of 3</option></select></label>
+                <label class="field"><span>Generation headroom</span><select id="generationPadding"><option value="0.1" selected>0.10 seconds · safest</option><option value="0.25">0.25 seconds</option><option value="0.5">0.5 seconds</option></select></label>
+                <label class="field"><span>Reference identity</span><select id="audioRefKeep"><option value="1" selected>1.00 · literal</option><option value="0.99">0.99 · fresh take</option><option value="0.97">0.97 · more expressive</option><option value="0.95">0.95 · freer</option></select></label>
+                <label class="field check-field"><input id="verify" type="checkbox" checked><span>Verify exact words</span></label>
+              </div>
+              <div class="resident-note"><span class="status-dot"></span><span><strong>Resident mode is on</strong><small>H3 and its loader cache stay hot after the first take. No idle timeout.</small></span><b id="residentState">Checking…</b></div>
+            </div>
+          </details>
+
+          <div class="generate-row">
+            <div class="estimate"><span class="tiny-wave"><i></i><i></i><i></i><i></i></span><span id="estimateText">One H3 chunk</span></div>
+            <button class="button primary" id="generateButton"><span id="generateLabel">Generate performance</span><span class="arrow">↗</span></button>
+          </div>
+          </div>
+        </div>
+
+        <div id="musicStudio" class="hidden">
+          <div class="music-hero">
+            <div class="music-disc"><i></i><span>H3</span></div>
+            <div><p class="eyebrow">The song room</p><h2>Build a complete track</h2><p>Instrumentals or full songs with timed verses, choruses, breaks, solos, and exact marked lyrics.</p></div>
+          </div>
+          <div class="composer-card music-composer">
+            <div class="composer-tabs music-kind-tabs">
+              <button class="music-kind-tab" data-kind="instrumental">Instrumental</button>
+              <button class="music-kind-tab active" data-kind="song">Song with lyrics</button>
+            </div>
+
+            <div class="music-preset-head"><label>Start with a sound</label><button class="text-button" id="clearMusicPreset">Clear preset</button></div>
+            <div class="music-preset-tools">
+              <label class="music-preset-search"><span>⌕</span><input id="musicPresetSearch" type="search" placeholder="Search styles, instruments, moods…" autocomplete="off"></label>
+              <select id="musicCategory" aria-label="Music category"><option value="all">All styles</option></select>
+              <span class="music-preset-count" id="musicPresetCount"></span>
+            </div>
+            <div class="music-presets" id="musicPresets"><span class="voice-count">Loading styles…</span></div>
+
+            <div class="controls-grid music-basics">
+              <label class="field"><span>Track title</span><input id="musicTitle" value="Midnight experiment" placeholder="My new song"></label>
+              <div class="field duration-field"><span>Length <b id="musicDurationValue">60 seconds</b></span><input id="musicDuration" type="range" min="5" max="60" step="1" value="60"><label class="duration-auto"><input id="musicAutoDuration" type="checkbox" checked><i></i><span>Auto-fit to lyrics and tempo</span></label></div>
+            </div>
+
+            <label class="field full music-field"><span>Style, tempo, mood, and movement</span><textarea id="musicStyle" rows="3">A wry, slow, swaggering acoustic blues-country novelty song around 88 BPM, dryly funny but emotionally sincere, with restrained verses and a memorable singalong chorus; the arrangement stays coherent and small for the full take.</textarea><small>Direction only. This text is never treated as lyrics.</small></label>
+            <label class="field full music-field"><span>Instrumentation and arrangement</span><textarea id="musicInstrumentation" rows="3">Fingerpicked resonator guitar, warm upright bass, compact brushed drum kit, occasional muted electric-guitar answers, and nothing else; no choir, no backing singers, no synths, and no orchestral build.</textarea></label>
+
+            <div id="songFields" class="song-fields">
+              <div class="song-divider"><span>Vocal performance</span><i></i></div>
+              <label class="field full"><span>Singer identity and delivery</span><textarea id="musicVocalist" rows="2">one expressive adult female singer with a warm weathered contralto, dry comic timing, clear natural English diction, subtle rasp, and professional connected phrasing</textarea><small>Performance direction only—it is explicitly excluded from every lyric block.</small></label>
+              <div class="lyric-head"><label for="musicLyrics">Song structure and exact lyrics</label><span id="lyricTiming">Add lyric lines</span></div>
+              <textarea id="musicLyrics" class="lyrics-editor" rows="15">[Intro]
+
+[Verse 1]
+I've been sitting on this shelf since nineteen seventy-five
+Got two googly eyes and no good reason to be alive
+She said I was solid, she said I was sweet
+Then she left me for a geode from across the street
+
+[Chorus]
+I'm a pet rock, honey, and I ain't got no game
+Just a lump in a cardboard box that nobody came to claim
+Got no arms to hold you, got no lips to kiss
+Just a hundred million years of loneliness
+
+[Bridge]
+They call me low maintenance like that makes it okay
+A hundred million years and nobody knows my name
+
+[Outro]</textarea>
+              <small class="lyric-note">The strongest one-minute results use roughly 3–4 vocal sections and 8–14 complete, naturally phrased lines. Numerous one-word lines can sound clipped even when every word is marked correctly.</small>
+              <div class="section-tools">
+                <span>Add section</span>
+                <button data-section="Verse">Verse</button><button data-section="Pre-Chorus">Pre-chorus</button><button data-section="Chorus">Chorus</button><button data-section="Bridge">Bridge</button><button data-section="Solo">Solo</button><button data-section="Outro">Outro</button>
+              </div>
+            </div>
+
+            <details class="advanced music-advanced">
+              <summary>Room, rendering, and seed <span>Optional</span></summary>
+              <div class="advanced-body">
+                <label class="field full"><span>Recording scene / venue</span><textarea id="musicScene" rows="2">a dry intimate live room with one performer and a small band recorded in one continuous take</textarea><small>The scene helps H3 understand that the arrangement is one physical performance.</small></label>
+                <label class="field full"><span>Non-musical ambience / room</span><textarea id="musicSoundscape" rows="2">A dry intimate live-room recording with faint chair movement and natural instrument handling, but no spoken introduction and no audience</textarea></label>
+                <div class="mini-grid">
+                  <label class="field"><span>Steps</span><select id="musicSteps"><option>15</option><option selected>20</option><option>30</option><option>40</option><option>50</option></select></label>
+                  <label class="field"><span>Output</span><select id="musicFormat"><option value="flac">FLAC · lossless</option><option value="mp3">MP3</option><option value="wav">WAV</option><option value="opus">Opus</option><option value="aac">AAC</option></select></label>
+                  <label class="field"><span>Seed · blank is random</span><input id="musicSeed" type="number" min="0" placeholder="Random"></label>
+                  <label class="field"><span>Song prompt engine</span><select id="musicPromptProfile"><option value="natural_song_sheet_v2" selected>Natural song sheet · recommended</option><option value="petrock_timed_v1">Legacy Pet Rock timing</option></select><small>The natural engine keeps the performance in one take instead of treating song sections as camera cuts.</small></label>
+                </div>
+              </div>
+            </details>
+
+            <div class="song-plan" id="songPlan"><span>60.2 seconds</span><span>32×32 audio-first canvas</span><span>No video decode</span></div>
+            <div class="generate-row">
+              <div class="estimate"><span class="tiny-wave"><i></i><i></i><i></i><i></i></span><span id="musicEstimate">Full song · about 60 seconds of stereo music</span></div>
+              <button class="button primary" id="generateMusicButton"><span id="generateMusicLabel">Compose song</span><span class="arrow">↗</span></button>
+            </div>
+          </div>
+        </div>
+
+        <div id="sfxStudio" class="hidden">
+          <div class="music-hero">
+            <div class="music-disc"><i></i><span>FX</span></div>
+            <div><p class="eyebrow">The effects bay</p><h2>Design a diegetic hit</h2><p>One-shots, Foley, whooshes, and ambience beds—no speech, no score. Built as first-class H3 audio, not a music preset hack.</p></div>
+          </div>
+          <div class="composer-card music-composer">
+            <div class="composer-tabs music-kind-tabs">
+              <button class="sfx-kind-tab active" data-kind="oneshot">One-shot</button>
+              <button class="sfx-kind-tab" data-kind="loop_bed">Loop / bed</button>
+            </div>
+
+            <div class="music-preset-head"><label>Start with a library sound</label><button class="text-button" id="clearSfxPreset">Clear preset</button></div>
+            <div class="music-preset-tools">
+              <label class="music-preset-search"><span>⌕</span><input id="sfxPresetSearch" type="search" placeholder="Search impacts, foley, ambience, UI…" autocomplete="off"></label>
+              <select id="sfxCategory" aria-label="SFX category"><option value="all">All categories</option></select>
+              <span class="music-preset-count" id="sfxPresetCount"></span>
+            </div>
+            <div class="music-presets" id="sfxPresets"><span class="voice-count">Loading SFX library…</span></div>
+
+            <div class="controls-grid music-basics">
+              <label class="field"><span>Clip title</span><input id="sfxTitle" value="Door latch" placeholder="My effect"></label>
+              <div class="field duration-field"><span>Length <b id="sfxDurationValue">3 seconds</b></span><input id="sfxDuration" type="range" min="1.5" max="30" step="0.5" value="3"><label class="duration-auto"><input id="sfxAutoDuration" type="checkbox" checked><i></i><span>Auto length from description</span></label></div>
+            </div>
+
+            <label class="field full music-field"><span>Effect description</span><textarea id="sfxDescription" rows="3">A single clean diegetic sound effect with a natural attack and short decay</textarea><small>Diegetic sound only. Do not write lyrics, dialogue, or song sections.</small></label>
+            <label class="field full music-field"><span>Acoustic space</span><textarea id="sfxSpace" rows="2">a neutral dry recording stage with no visible source</textarea></label>
+            <label class="field intensity-field"><span>Presence <b id="sfxIntensityValue">70%</b></span><input id="sfxIntensity" type="range" min="0" max="100" value="70"></label>
+
+            <details class="advanced music-advanced">
+              <summary>Rendering and seed <span>Optional</span></summary>
+              <div class="advanced-body">
+                <div class="mini-grid">
+                  <label class="field"><span>Steps</span><select id="sfxSteps"><option>15</option><option selected>20</option><option>30</option><option>40</option><option>50</option></select></label>
+                  <label class="field"><span>Output</span><select id="sfxFormat"><option value="flac">FLAC · lossless</option><option value="mp3">MP3</option><option value="wav">WAV</option><option value="opus">Opus</option><option value="aac">AAC</option></select></label>
+                  <label class="field"><span>Seed · blank is random</span><input id="sfxSeed" type="number" min="0" placeholder="Random"></label>
+                  <label class="field"><span>Canvas</span><select id="sfxResolution"><option selected>32</option><option>64</option><option>128</option></select></label>
+                </div>
+              </div>
+            </details>
+
+            <div class="song-plan" id="sfxPlan"><span>3.0 seconds</span><span>32×32 audio-first canvas</span><span>No speech · no score</span></div>
+            <div class="generate-row">
+              <div class="estimate"><span class="tiny-wave"><i></i><i></i><i></i><i></i></span><span id="sfxEstimate">One-shot · about 3 seconds of stereo SFX</span></div>
+              <button class="button primary" id="generateSfxButton"><span id="generateSfxLabel">Render effect</span><span class="arrow">↗</span></button>
+            </div>
+          </div>
+        </div>
+
+        <section class="result-card hidden" id="resultCard">
+          <div class="result-head">
+            <div><p class="eyebrow">Latest take</p><h2 id="resultTitle">Your performance</h2></div>
+            <span class="take-badge" id="takeBadge">Ready</span>
+          </div>
+          <audio id="audioPlayer" controls preload="metadata"></audio>
+          <div class="result-actions">
+            <p id="resultMeta">Lossless stereo audio</p>
+            <div class="result-buttons">
+              <button class="button compact hidden" id="viewPromptButton" type="button">View final prompt</button>
+              <a class="button compact" id="downloadButton" download>Download</a>
+            </div>
+          </div>
+        </section>
+        <section class="history-section hidden" id="historySection">
+          <div class="section-heading"><p class="eyebrow">This session</p><h2>Recent takes</h2></div>
+          <div id="historyList" class="history-list"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="progress-overlay hidden" id="progressOverlay" role="status" aria-live="polite">
+    <div class="progress-card">
+      <div class="orb"><span></span><i></i><i></i><i></i></div>
+      <p class="eyebrow">H3 is performing</p>
+      <h2 id="progressTitle">Finding the voice…</h2>
+      <p id="progressDetail">The first verified take usually takes around half a minute.</p>
+      <div class="progress-track"><i id="progressBar"></i></div>
+      <div class="progress-foot"><span id="elapsed">0:00 elapsed</span><span id="queueText">GPU reserved</span></div>
+      <button class="text-button" id="hideProgress">Keep working in background</button>
+    </div>
+  </div>
+
+  <dialog id="enrollDialog">
+    <form id="enrollForm">
+      <div class="dialog-head"><div><p class="eyebrow">Voice reference</p><h2>Add your own voice</h2></div><button type="button" class="icon-button" id="closeEnroll">×</button></div>
+      <p class="dialog-copy">Upload a clean audio or video clip with one speaker. The service extracts and prepares the reference automatically.</p>
+      <label class="field"><span>Name</span><input name="name" required placeholder="My velvet narrator"></label>
+      <label class="field"><span>Description</span><textarea name="description" rows="3" placeholder="A natural expressive adult speaker…"></textarea></label>
+      <label class="upload-zone"><input name="file" type="file" accept="audio/*,video/*" required><span class="upload-icon">↑</span><strong>Choose audio or video</strong><small>Clean speech, one speaker, minimal music</small></label>
+      <p class="form-message" id="enrollMessage"></p>
+      <button class="button primary full-button" type="submit">Prepare voice</button>
+    </form>
+  </dialog>
+
+  <dialog id="promptDialog" class="prompt-dialog">
+    <form method="dialog">
+      <div class="dialog-head"><div><p class="eyebrow">Exact ComfyUI input</p><h2>Final H3 prompt</h2></div><button type="submit" class="icon-button">×</button></div>
+      <p class="dialog-copy">This is the fully expanded prompt sent to MiniMax H3, including computed section timestamps and exact lyric boundaries.</p>
+      <pre id="finalPromptText">Loading…</pre>
+      <div class="prompt-actions"><button class="button compact" id="copyPromptButton" type="button">Copy prompt</button><button class="button compact" type="submit">Close</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
+  <script src="/studio-assets/app.js" defer></script>
+</body>
+</html>

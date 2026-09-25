@@ -1,0 +1,77 @@
+{
+  "specVersion": 2,
+  "name": "comfy-workflow-h3-rtx-vsr",
+  "title": "NVIDIA RTX Video Super-Resolution",
+  "entry": "./workflow.ir.json",
+  "description": "LoadVideo → RTXVideoSuperResolution → SaveVideo. Gemmy `video h3 upscale --backend rtx`.",
+  "parameters": {
+    "video": {
+      "type": "string",
+      "required": true
+    },
+    "quality": {
+      "type": "string",
+      "required": false,
+      "default": "HIGH"
+    },
+    "scale": {
+      "type": "int",
+      "required": false,
+      "default": 2
+    },
+    "resize_type": {
+      "type": "string",
+      "required": false,
+      "default": "scale by multiplier"
+    },
+    "target_width": {
+      "type": "int",
+      "required": false,
+      "default": 1920
+    },
+    "target_height": {
+      "type": "int",
+      "required": false,
+      "default": 1088
+    },
+    "keep_aspect": {
+      "type": "boolean",
+      "required": false,
+      "default": false
+    },
+    "output_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/rtx_vsr"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "IMAGE"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "CreateVideo",
+      "GetVideoComponents",
+      "LoadVideo",
+      "RTXVideoSuperResolution",
+      "SaveVideo"
+    ],
+    "nodePacks": [
+      {
+        "id": "comfyui_nvidia_rtx_nodes",
+        "name": "ComfyUI_NVIDIA_RTX_Nodes",
+        "version": "^0.1.3",
+        "repository": "https://github.com/Comfy-Org/Nvidia_RTX_Nodes_ComfyUI",
+        "provides": [
+          "RTXVideoSuperResolution"
+        ],
+        "source": "registry"
+      }
+    ],
+    "models": []
+  },
+  "coreVersion": "^0.2.0"
+}

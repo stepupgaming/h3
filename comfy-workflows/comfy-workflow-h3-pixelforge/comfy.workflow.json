@@ -1,0 +1,106 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-pixelforge",
+  "title": "H3 PixelForge sprites",
+  "entry": "./workflow.ir.json",
+  "description": "MiniMax-H3 clip → PixelForge keyed + cropped sprite loop, sheet, GIF. No full-frame 8-bit crush. Gemmy `video h3 sprites`.",
+  "parameters": {
+    "video": {
+      "type": "string",
+      "required": true
+    },
+    "every_nth": {
+      "type": "int",
+      "required": false,
+      "default": 2
+    },
+    "start_offset": {
+      "type": "int",
+      "required": false,
+      "default": 0
+    },
+    "max_frames": {
+      "type": "int",
+      "required": false,
+      "default": 0
+    },
+    "key_color": {
+      "type": "string",
+      "required": false,
+      "default": "auto"
+    },
+    "loop_mode": {
+      "type": "string",
+      "required": false,
+      "default": "off"
+    },
+    "filename_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "gemmy/pixelforge/sprite"
+    },
+    "sheet_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "gemmy/pixelforge/sheet"
+    },
+    "gif_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "gemmy/pixelforge/gif"
+    },
+    "webp_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "gemmy/pixelforge/preview"
+    },
+    "tag_name": {
+      "type": "string",
+      "required": false,
+      "default": "run"
+    },
+    "fps": {
+      "type": "float",
+      "required": false,
+      "default": 12
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "IMAGE"
+    },
+    {
+      "name": "output-1",
+      "type": "IMAGE"
+    },
+    {
+      "name": "output-2",
+      "type": "STRING"
+    },
+    {
+      "name": "output-3",
+      "type": "STRING"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "LoadVideo",
+      "PixelForgeAsepriteExport",
+      "PixelForgeAutoCrop",
+      "PixelForgeChromaKey",
+      "PixelForgeFrameDedup",
+      "PixelForgeLoopTrim",
+      "PixelForgeSaveGIF",
+      "PixelForgeSheetPack",
+      "PixelForgeVideoToFrames",
+      "SaveAnimatedWEBP",
+      "SaveImage"
+    ],
+    "nodePacks": [
+      "ComfyUI-PixelForge-H3"
+    ],
+    "models": []
+  },
+  "coreVersion": "^0.2.0"
+}

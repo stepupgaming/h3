@@ -1,0 +1,17 @@
+ComfyUI NVIDIA DLSS Frame Interpolation
+Copyright 2026 Konohamaru04 and contributors
+
+Node Python is MIT (LICENSE-DLSS-Visual-Enhancer.txt), derived from
+Merserk DLSS 5 Visual Enhancer v5.0.
+
+NVIDIA, DLSS, NGX, and related marks are trademarks of NVIDIA Corporation.
+This pin is an independent community project and is not endorsed by NVIDIA.
+
+NVIDIA RTX SDKs (DLSS / NGX) ship as local Git LFS binaries under
+bin/runtime/ and are **not** committed in Gemmy. Their license
+(LICENSE-NVIDIA-DLSS.txt beside the DLLs) includes a commercial-release
+notification requirement for applications that incorporate the SDK.
+RenoDX and ReShade notices also sit beside those binaries.
+
+Gemmy product use is interpolation-only (`gemmy video h3 interpolate`).
+The pack's Super Resolution / image upscale nodes are not wired.

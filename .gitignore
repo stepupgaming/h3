@@ -1,0 +1,17 @@
+/target
+runtimes/minimax-h3/.venv
+runtimes/minimax-h3/jev-sdk/.venv
+runtimes/minimax-h3/ComfyUI/input
+runtimes/minimax-h3/ComfyUI/output
+runtimes/minimax-h3/ComfyUI/temp
+runtimes/minimax-h3/ComfyUI/user
+runtimes/minimax-h3/ComfyUI/models
+runtimes/minimax-h3/ComfyUI/extra_model_paths.yaml
+runtimes/minimax-h3/ComfyUI/custom_nodes/ComfyUI-NVIDIA-DLSS-Frame-Interpolation/bin/runtime
+runtimes/minimax-h3/ComfyUI/custom_nodes/ComfyUI-NVIDIA-DLSS-Frame-Interpolation/Assets/*.mp4
+**/__pycache__
+**/.pytest_cache
+**/node_modules
+**/.env
+!**/.env.example
+*.pyc

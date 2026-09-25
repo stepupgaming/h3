@@ -1,0 +1,34 @@
+{
+  "name": "@stepupgaming/comfy-workflow-h3-ganloss-stage1-still-vsa",
+  "version": "0.1.0",
+  "description": "Still-only Eros Ref2VA stage 1 with Ref2VAVSAGatePatch. Gemmy `video h3 generate --mode ref2va --vsa`.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "comfy-workflow",
+    "comfyui",
+    "comfy-workflows"
+  ],
+  "comfyWorkflow": "./comfy.workflow.json",
+  "files": [
+    "README.md",
+    "ir.build.ts",
+    "workflow.ir.json",
+    "comfy.workflow.json",
+    "prompt.template.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@stepupgaming/comfy-workflows": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stepupgaming/gemmy.git",
+    "directory": "comfy-workflows/comfy-workflow-h3-ganloss-stage1-still-vsa"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

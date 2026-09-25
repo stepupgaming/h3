@@ -1,0 +1,54 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-sam3-track",
+  "title": "SAM3 Video Track to Mask",
+  "entry": "./workflow.ir.json",
+  "description": "SAM3.1 video track → mask MP4. First stage of Gemmy `video h3 edit`.",
+  "parameters": {
+    "video": {
+      "type": "string",
+      "required": true
+    },
+    "checkpoint": {
+      "type": "string",
+      "required": false,
+      "default": "sam3.1_multiplex_fp16.safetensors"
+    },
+    "prompt": {
+      "type": "string",
+      "required": true
+    },
+    "output_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/sam3"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "IMAGE"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "CLIPTextEncode",
+      "CheckpointLoaderSimple",
+      "CreateVideo",
+      "GetVideoComponents",
+      "LoadVideo",
+      "MaskToImage",
+      "SAM3_TrackToMask",
+      "SAM3_VideoTrack",
+      "SaveVideo"
+    ],
+    "nodePacks": [],
+    "models": [
+      {
+        "kind": "checkpoint",
+        "name": "sam3.1_multiplex_fp16.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

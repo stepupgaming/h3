@@ -1,0 +1,26 @@
+{
+  "name": "@stepupgaming/comfy-workflow-h3-ref2va-multiref",
+  "version": "0.1.1",
+  "description": "Imported ComfyUI workflow packaged as @stepupgaming/comfy-workflow-h3-ref2va-multiref. Verify license and redistribution rights before publishing.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "comfy-workflow",
+    "comfyui",
+    "comfy-workflows"
+  ],
+  "comfyWorkflow": "./comfy.workflow.json",
+  "files": [
+    "README.md",
+    "comfy.workflow.json",
+    "ir.build.ts",
+    "prompt.template.json",
+    "workflow.ir.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@stepupgaming/comfy-workflows": "^0.2.0"
+  }
+}

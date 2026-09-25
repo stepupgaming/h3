@@ -1,0 +1,34 @@
+{
+  "name": "@stepupgaming/comfy-workflow-h3-ref2va-nosla",
+  "version": "0.1.0",
+  "description": "H3 Ref2VA 4-step res_multistep without native SLA. Gemmy `video h3 generate --mode ref2va --no-sla`.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "comfy-workflow",
+    "comfyui",
+    "comfy-workflows"
+  ],
+  "comfyWorkflow": "./comfy.workflow.json",
+  "files": [
+    "README.md",
+    "ir.build.ts",
+    "prompt.template.json",
+    "workflow.ir.json",
+    "comfy.workflow.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@stepupgaming/comfy-workflows": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stepupgaming/gemmy.git",
+    "directory": "comfy-workflows/comfy-workflow-h3-ref2va-nosla"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

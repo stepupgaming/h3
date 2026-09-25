@@ -1,0 +1,131 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-singularity-turbo",
+  "title": "H3 Singularity turbo sample",
+  "entry": "./workflow.ir.json",
+  "description": "Singularity process 2: UNET and turbo LoRA. 2 denoise steps, then exit.",
+  "parameters": {
+    "unet": {
+      "type": "string",
+      "required": false,
+      "default": "Minimax-h3_Singularity_ref2va_v1.3_int8.safetensors"
+    },
+    "turbo_lora": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors"
+    },
+    "lms_lora": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_lms_v1.0_r64.safetensors"
+    },
+    "realism_lora": {
+      "type": "string",
+      "required": false,
+      "default": "h3-realism-people-t2v-i2v-r2v.safetensors"
+    },
+    "tau": {
+      "type": "float",
+      "required": false,
+      "default": 1.3
+    },
+    "seed": {
+      "type": "int",
+      "required": false,
+      "default": 42
+    },
+    "conditioning_path": {
+      "type": "string",
+      "required": true
+    },
+    "latent_path": {
+      "type": "string",
+      "required": true
+    },
+    "upscale_model": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_latent_upscaler_3d_bf16.safetensors"
+    },
+    "upscale_mode": {
+      "type": "string",
+      "required": false,
+      "default": "scale by multiplier"
+    },
+    "upscale_scale": {
+      "type": "float",
+      "required": false,
+      "default": 1.25
+    },
+    "latent_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/singularity_turbo"
+    },
+    "sigmas_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/singularity_sig"
+    },
+    "fingerprint": {
+      "type": "string",
+      "required": false,
+      "default": "{}"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "STRING"
+    },
+    {
+      "name": "output-1",
+      "type": "STRING"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "BasicGuider",
+      "BasicScheduler",
+      "BlockSparseAttention",
+      "ExtendIntermediateSigmas",
+      "GemmyH3LoadAVLatent",
+      "GemmyH3LoadConditioning",
+      "GemmyH3SaveAVLatent",
+      "GemmyH3SaveSigmas",
+      "KSamplerSelect",
+      "LTXVConcatAVLatent",
+      "LTXVSeparateAVLatent",
+      "LoraLoaderModelOnly",
+      "MiniMaxChunkFeedForward",
+      "MiniMaxH3MemoryEfficientSageAttentionPatch",
+      "MiniMaxLowVRAMAttention",
+      "MinimaxH3LatentUpscaler3D",
+      "ModelAttentionBackend",
+      "RandomNoise",
+      "SamplerCustomAdvanced",
+      "SplitSigmas",
+      "UNETLoader"
+    ],
+    "nodePacks": [
+      "gemmy-h3-context",
+      "Comfyui_Minimax_h3_latent_Upscaler"
+    ],
+    "models": [
+      {
+        "kind": "model",
+        "name": "Minimax-h3_Singularity_ref2va_v1.3_int8.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_latent_upscaler_3d_bf16.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

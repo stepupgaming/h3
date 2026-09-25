@@ -1,0 +1,22 @@
+{
+  "hidden_size": 5376,
+  "num_layers": 50,
+  "token_refiner_num_layers": 2,
+  "num_attention_heads": 56,
+  "attention_head_dim": 128,
+  "ffn_hidden_size": 14336,
+  "latents_dim": 24,
+  "audio_latents_dim": 32,
+  "patch_size": [1, 2, 2],
+  "text_dim": 5120,
+  "timestep_input_dim": 256,
+  "time_embed_hidden_size": 5376,
+  "time_embed_dim": 2688,
+  "rope_inv_freq_len": 16,
+  "norm_eps": 1e-5,
+  "qk_norm_eps": 1e-5,
+  "final_norm_eps": 1e-5,
+  "sigma_shift_video": 12.0,
+  "sigma_shift_audio": 3.0,
+  "rope_theta": 10000.0
+}

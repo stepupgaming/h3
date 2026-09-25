@@ -1,0 +1,140 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-t2va-nosla",
+  "title": "H3 T2VA 4-step res_multistep (no SLA)",
+  "entry": "./workflow.ir.json",
+  "description": "Matched 009jev sampler without H3JevNativeSLAPatch. Gemmy `video h3 generate --mode t2va --no-sla`.",
+  "parameters": {
+    "unet": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
+    },
+    "clip": {
+      "type": "string",
+      "required": false,
+      "default": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors"
+    },
+    "video_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "audio_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "prompt": {
+      "type": "string",
+      "required": true
+    },
+    "width": {
+      "type": "int",
+      "required": false,
+      "default": 864
+    },
+    "height": {
+      "type": "int",
+      "required": false,
+      "default": 480
+    },
+    "length": {
+      "type": "int",
+      "required": false,
+      "default": 124
+    },
+    "seed": {
+      "type": "int",
+      "required": false,
+      "default": 42
+    },
+    "steps": {
+      "type": "int",
+      "required": false,
+      "default": 20
+    },
+    "denoise": {
+      "type": "float",
+      "required": false,
+      "default": 1
+    },
+    "shift_video": {
+      "type": "int",
+      "required": false,
+      "default": 12
+    },
+    "shift_audio": {
+      "type": "int",
+      "required": false,
+      "default": 3
+    },
+    "latent_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/t2va_av"
+    },
+    "output_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/t2va"
+    },
+    "fingerprint": {
+      "type": "string",
+      "required": false,
+      "default": "{}"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "IMAGE"
+    },
+    {
+      "name": "output-1",
+      "type": "IMAGE"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "BasicGuider",
+      "BasicScheduler",
+      "CLIPLoader",
+      "ConditioningZeroOut",
+      "CreateVideo",
+      "GemmyH3SaveAVLatent",
+      "KSamplerSelect",
+      "MiniMaxH3ImageToVideo",
+      "MiniMaxH3SigmaShift",
+      "RandomNoise",
+      "SamplerCustomAdvanced",
+      "SaveVideo",
+      "UNETLoader",
+      "VAEDecode",
+      "VAEDecodeAudio",
+      "VAELoader"
+    ],
+    "nodePacks": [
+      "gemmy-h3-context"
+    ],
+    "models": [
+      {
+        "kind": "model",
+        "name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_video_vae_fp16.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

@@ -1,0 +1,161 @@
+import sys
+import unittest
+from pathlib import Path
+
+import torch
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from vsr_pro import (
+    MAX_OUTPUT_EDGE,
+    VERIFIED_VSR_MAX_EDGE,
+    assert_channel_integrity,
+    fit_dimensions_preserving_aspect,
+    plan_dimensions,
+    print_dimensions_to_pixels,
+)
+
+
+class DimensionPlanningTests(unittest.TestCase):
+    def test_15360_target_uses_direct_vsr(self):
+        plan = plan_dimensions(
+            input_width=3840,
+            input_height=3840,
+            requested_width=15360,
+            requested_height=15360,
+        )
+        self.assertFalse(plan.uses_hybrid_fallback)
+        self.assertEqual((plan.vsr_width, plan.vsr_height), (15360, 15360))
+
+    def test_16384_target_uses_verified_intermediate(self):
+        plan = plan_dimensions(
+            input_width=4096,
+            input_height=4096,
+            requested_width=16384,
+            requested_height=16384,
+        )
+        self.assertTrue(plan.uses_hybrid_fallback)
+        self.assertEqual((plan.output_width, plan.output_height), (MAX_OUTPUT_EDGE,) * 2)
+        self.assertEqual((plan.vsr_width, plan.vsr_height), (VERIFIED_VSR_MAX_EDGE,) * 2)
+
+    def test_non_square_target_preserves_intermediate_aspect(self):
+        plan = plan_dimensions(
+            input_width=4096,
+            input_height=2048,
+            requested_width=16384,
+            requested_height=8192,
+        )
+        self.assertEqual((plan.vsr_width, plan.vsr_height), (15360, 7680))
+
+    def test_downscale_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "only supports upscaling"):
+            plan_dimensions(
+                input_width=4096,
+                input_height=4096,
+                requested_width=2048,
+                requested_height=2048,
+            )
+
+    def test_output_beyond_16k_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "maximum output edge"):
+            plan_dimensions(
+                input_width=4096,
+                input_height=4096,
+                requested_width=20000,
+                requested_height=20000,
+            )
+
+
+class PrintDimensionTests(unittest.TestCase):
+    def test_millimetres_and_dpi_convert_to_pixels(self):
+        self.assertEqual(
+            print_dimensions_to_pixels(width_mm=500.0, height_mm=500.0, dpi=300),
+            (5906, 5906),
+        )
+
+    def test_print_pixels_are_aligned_for_rtx(self):
+        width, height = print_dimensions_to_pixels(
+            width_mm=500.0,
+            height_mm=500.0,
+            dpi=300,
+        )
+        plan = plan_dimensions(
+            input_width=4096,
+            input_height=4096,
+            requested_width=width,
+            requested_height=height,
+        )
+        self.assertEqual((plan.output_width, plan.output_height), (5904, 5904))
+
+    def test_non_positive_print_value_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "must be positive"):
+            print_dimensions_to_pixels(width_mm=0, height_mm=500, dpi=300)
+
+
+class AspectRatioTests(unittest.TestCase):
+    def test_landscape_source_fits_inside_square_pixel_box(self):
+        self.assertEqual(
+            fit_dimensions_preserving_aspect(
+                input_width=4096,
+                input_height=2048,
+                target_width=6000,
+                target_height=6000,
+            ),
+            (6000, 3000),
+        )
+
+    def test_portrait_source_fits_inside_landscape_print_box(self):
+        self.assertEqual(
+            fit_dimensions_preserving_aspect(
+                input_width=2048,
+                input_height=4096,
+                target_width=6000,
+                target_height=4000,
+            ),
+            (2000, 4000),
+        )
+
+    def test_fit_alignment_never_exceeds_target_box(self):
+        self.assertEqual(
+            fit_dimensions_preserving_aspect(
+                input_width=1024,
+                input_height=512,
+                target_width=2362,
+                target_height=2362,
+            ),
+            (2360, 1176),
+        )
+
+    def test_invalid_target_box_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "must be positive"):
+            fit_dimensions_preserving_aspect(
+                input_width=4096,
+                input_height=4096,
+                target_width=0,
+                target_height=6000,
+            )
+
+
+class ChannelIntegrityTests(unittest.TestCase):
+    def test_normal_rgb_is_accepted(self):
+        source = torch.full((3, 4, 4), 0.4)
+        output = torch.full((3, 8, 8), 0.42)
+        assert_channel_integrity(source, output)
+
+    def test_blue_channel_collapse_is_rejected(self):
+        source = torch.full((3, 4, 4), 0.4)
+        output = torch.full((3, 8, 8), 0.4)
+        output[2].zero_()
+        with self.assertRaisesRegex(RuntimeError, "blue channel collapsed"):
+            assert_channel_integrity(source, output)
+
+    def test_nan_is_rejected(self):
+        source = torch.full((3, 4, 4), 0.4)
+        output = torch.full((3, 8, 8), 0.4)
+        output[0, 0, 0] = torch.nan
+        with self.assertRaisesRegex(RuntimeError, "NaN or infinite"):
+            assert_channel_integrity(source, output)
+
+
+if __name__ == "__main__":
+    unittest.main()

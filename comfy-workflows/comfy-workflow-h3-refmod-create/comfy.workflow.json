@@ -1,0 +1,87 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-refmod-create",
+  "title": "H3 RefMod create (visual)",
+  "entry": "./workflow.ir.json",
+  "description": "Folder of stills/video → MiniMax H3 video VAE encode → saved RefMod .safetensors. Gemmy `video h3 refmod create`. No DiT.",
+  "parameters": {
+    "video_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "folder": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": false,
+      "default": "character"
+    },
+    "mode": {
+      "type": "string",
+      "required": false,
+      "default": "Full Reference"
+    },
+    "concept_type": {
+      "type": "string",
+      "required": false,
+      "default": "identity"
+    },
+    "ref_resolution": {
+      "type": "int",
+      "required": false,
+      "default": 1024
+    },
+    "max_tokens": {
+      "type": "int",
+      "required": false,
+      "default": 8192
+    },
+    "max_items": {
+      "type": "int",
+      "required": false,
+      "default": 32
+    },
+    "max_frames": {
+      "type": "int",
+      "required": false,
+      "default": 240
+    },
+    "subfolder": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "STRING"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "MiniMaxH3RefModExtract",
+      "MiniMaxH3RefModFolderLoader",
+      "MiniMaxH3RefModSave",
+      "VAELoader"
+    ],
+    "nodePacks": [
+      "ComfyUI-MiniMaxH3Mod"
+    ],
+    "models": [
+      {
+        "kind": "vae",
+        "name": "minimax_h3_video_vae_fp16.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

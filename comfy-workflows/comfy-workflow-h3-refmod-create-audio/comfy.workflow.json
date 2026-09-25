@@ -1,0 +1,72 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-refmod-create-audio",
+  "title": "H3 RefMod create (audio)",
+  "entry": "./workflow.ir.json",
+  "description": "Wav/mp3 → MiniMax H3 audio VAE encode → saved audio RefMod. Experimental; speaker identity transfer is not claimed. Gemmy `video h3 refmod create --audio`.",
+  "parameters": {
+    "audio_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "audio": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": false,
+      "default": "voice"
+    },
+    "max_seconds": {
+      "type": "float",
+      "required": false,
+      "default": 15
+    },
+    "max_tokens": {
+      "type": "int",
+      "required": false,
+      "default": 5120
+    },
+    "concept_type": {
+      "type": "string",
+      "required": false,
+      "default": "voice"
+    },
+    "subfolder": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "STRING"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "LoadAudio",
+      "MiniMaxH3RefModAudioExtract",
+      "MiniMaxH3RefModSave",
+      "VAELoader"
+    ],
+    "nodePacks": [
+      "ComfyUI-MiniMaxH3Mod"
+    ],
+    "models": [
+      {
+        "kind": "vae",
+        "name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

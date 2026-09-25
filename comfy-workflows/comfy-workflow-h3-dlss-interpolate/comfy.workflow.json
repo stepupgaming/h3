@@ -1,0 +1,65 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-dlss-interpolate",
+  "title": "H3 DLSS frame interpolate",
+  "entry": "./workflow.ir.json",
+  "description": "Post-process a finished MiniMax-H3 MP4 with NVIDIA DLSS Frame Generation. Gemmy `video h3 interpolate`. Not an upscale path; not inside continue/loop encode.",
+  "parameters": {
+    "video": {
+      "type": "string",
+      "required": true
+    },
+    "output_fps": {
+      "type": "string",
+      "required": false,
+      "default": "48"
+    },
+    "dlss_engine": {
+      "type": "string",
+      "required": false,
+      "default": "Auto"
+    },
+    "encoding_quality": {
+      "type": "string",
+      "required": false,
+      "default": "Max"
+    },
+    "video_codec": {
+      "type": "string",
+      "required": false,
+      "default": "H.264"
+    },
+    "container": {
+      "type": "string",
+      "required": false,
+      "default": "MP4"
+    },
+    "filename_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "gemmy/dlss/interpolate"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "VIDEO"
+    },
+    {
+      "name": "output-1",
+      "type": "STRING"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "LoadVideo",
+      "NvidiaDLSSFrameInterpolation",
+      "SaveVideo"
+    ],
+    "nodePacks": [
+      "ComfyUI-NVIDIA-DLSS-Frame-Interpolation"
+    ],
+    "models": []
+  },
+  "coreVersion": "^0.2.0"
+}

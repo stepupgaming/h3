@@ -1,0 +1,34 @@
+{
+  "name": "@stepupgaming/comfy-workflow-h3-ganloss-stage2-still-refmod-audio",
+  "version": "0.1.0",
+  "description": "Eros still-only stage 2 with RefMods and one live audio ref.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "comfy-workflow",
+    "comfyui",
+    "comfy-workflows"
+  ],
+  "comfyWorkflow": "./comfy.workflow.json",
+  "files": [
+    "README.md",
+    "ir.build.ts",
+    "workflow.ir.json",
+    "comfy.workflow.json",
+    "prompt.template.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@stepupgaming/comfy-workflows": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stepupgaming/gemmy.git",
+    "directory": "comfy-workflows/comfy-workflow-h3-ganloss-stage2-still-refmod-audio"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

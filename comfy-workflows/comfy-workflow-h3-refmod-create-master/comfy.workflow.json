@@ -1,0 +1,110 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-refmod-create-master",
+  "title": "H3 RefMod create (visual + audio bundle)",
+  "entry": "./workflow.ir.json",
+  "description": "Stills/video folder plus a voice clip → one v5 RefMod bundle. Packaging does not bind voice to the face. Gemmy `video h3 refmod create --audio`.",
+  "parameters": {
+    "video_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "audio_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "folder": {
+      "type": "string",
+      "required": true
+    },
+    "audio": {
+      "type": "string",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": false,
+      "default": "character"
+    },
+    "mode": {
+      "type": "string",
+      "required": false,
+      "default": "Full Reference"
+    },
+    "concept_type": {
+      "type": "string",
+      "required": false,
+      "default": "identity"
+    },
+    "ref_resolution": {
+      "type": "int",
+      "required": false,
+      "default": 1024
+    },
+    "max_tokens": {
+      "type": "int",
+      "required": false,
+      "default": 8192
+    },
+    "max_items": {
+      "type": "int",
+      "required": false,
+      "default": 32
+    },
+    "max_frames": {
+      "type": "int",
+      "required": false,
+      "default": 240
+    },
+    "max_seconds": {
+      "type": "float",
+      "required": false,
+      "default": 15
+    },
+    "subfolder": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    },
+    "save_layout": {
+      "type": "string",
+      "required": false,
+      "default": "bundle"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "STRING"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "LoadAudio",
+      "MiniMaxH3RefModFolderLoader",
+      "MiniMaxH3RefModMasterExtract",
+      "VAELoader"
+    ],
+    "nodePacks": [
+      "ComfyUI-MiniMaxH3Mod"
+    ],
+    "models": [
+      {
+        "kind": "vae",
+        "name": "minimax_h3_video_vae_fp16.safetensors"
+      },
+      {
+        "kind": "vae",
+        "name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

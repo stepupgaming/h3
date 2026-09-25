@@ -1,0 +1,103 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-singularity-final",
+  "title": "H3 Singularity final sample",
+  "entry": "./workflow.ir.json",
+  "description": "Singularity process 3: fresh UNET, LMS and realism, 10 denoise steps, then exit.",
+  "parameters": {
+    "unet": {
+      "type": "string",
+      "required": false,
+      "default": "Minimax-h3_Singularity_ref2va_v1.3_int8.safetensors"
+    },
+    "turbo_lora": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors"
+    },
+    "lms_lora": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_lms_v1.0_r64.safetensors"
+    },
+    "realism_lora": {
+      "type": "string",
+      "required": false,
+      "default": "h3-realism-people-t2v-i2v-r2v.safetensors"
+    },
+    "tau": {
+      "type": "float",
+      "required": false,
+      "default": 1.3
+    },
+    "conditioning_path": {
+      "type": "string",
+      "required": true
+    },
+    "latent_path": {
+      "type": "string",
+      "required": true
+    },
+    "sigmas_path": {
+      "type": "string",
+      "required": true
+    },
+    "latent_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/singularity_final"
+    },
+    "fingerprint": {
+      "type": "string",
+      "required": false,
+      "default": "{}"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "STRING"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "BasicGuider",
+      "BlockSparseAttention",
+      "DisableNoise",
+      "GemmyH3LoadAVLatent",
+      "GemmyH3LoadConditioning",
+      "GemmyH3LoadSigmas",
+      "GemmyH3SaveAVLatent",
+      "KSamplerSelect",
+      "LoraLoaderModelOnly",
+      "MiniMaxChunkFeedForward",
+      "MiniMaxH3MemoryEfficientSageAttentionPatch",
+      "MiniMaxLowVRAMAttention",
+      "ModelAttentionBackend",
+      "SamplerCustomAdvanced",
+      "UNETLoader"
+    ],
+    "nodePacks": [
+      "gemmy-h3-context"
+    ],
+    "models": [
+      {
+        "kind": "model",
+        "name": "Minimax-h3_Singularity_ref2va_v1.3_int8.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_lms_v1.0_r64.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "h3-realism-people-t2v-i2v-r2v.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

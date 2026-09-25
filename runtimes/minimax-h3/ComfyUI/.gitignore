@@ -1,0 +1,43 @@
+__pycache__/
+*.py[cod]
+/output/
+/input/
+!/input/example.png
+/models/
+/temp/
+# Gemmy H3: pin packs under custom_nodes/ ARE tracked (product engine).
+# Ignore only non-product noise inside that tree.
+# Optional local-only packs — never vendor (LBH node repo has no LICENSE;
+# Motion Context is GPL-3.0, same bar as Context Loop).
+custom_nodes/ComfyUI-H3-FaceRefine/
+custom_nodes/Comfyui_Minimax_h3_latent_Upscaler/
+custom_nodes/ComfyUI-H3-Motion-Context/
+custom_nodes/**/__pycache__/
+custom_nodes/**/*.pyc
+custom_nodes/**/.git/
+custom_nodes/**/node.zip
+custom_nodes/**/.github/
+# NVIDIA DLSS SDK binaries + demo Assets (Git LFS; not committed).
+custom_nodes/ComfyUI-NVIDIA-DLSS-Frame-Interpolation/bin/runtime/
+custom_nodes/ComfyUI-NVIDIA-DLSS-Frame-Interpolation/Assets/
+!custom_nodes/example_node.py.example
+# Template only — runtime writes a temp yaml from GEMMY_H3_CHECKPOINTS.
+# Keep the checked-in template tracked:
+# extra_model_paths.yaml
+extra_model_paths.yaml.bak
+/.vs
+.vscode/
+.idea/
+venv*/
+.venv/
+/web/extensions/*
+!/web/extensions/logging.js.example
+!/web/extensions/core/
+/tests-ui/data/object_info.json
+/user/
+*.log
+web_custom_versions/
+.DS_Store
+filtered-openapi.yaml
+uv.lock
+.comfy_environment

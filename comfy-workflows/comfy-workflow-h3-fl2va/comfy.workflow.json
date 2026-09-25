@@ -1,0 +1,141 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-fl2va",
+  "title": "H3 First-Frame to Video-Audio",
+  "entry": "./workflow.ir.json",
+  "description": "MiniMax-H3 image-to-video (first frame). Gemmy `video h3 generate --mode i2v`.",
+  "parameters": {
+    "unet": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
+    },
+    "clip": {
+      "type": "string",
+      "required": false,
+      "default": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors"
+    },
+    "video_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "audio_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_audio_vae_fp32.safetensors"
+    },
+    "first_image": {
+      "type": "string",
+      "required": true
+    },
+    "prompt": {
+      "type": "string",
+      "required": true
+    },
+    "width": {
+      "type": "int",
+      "required": false,
+      "default": 864
+    },
+    "height": {
+      "type": "int",
+      "required": false,
+      "default": 480
+    },
+    "length": {
+      "type": "int",
+      "required": false,
+      "default": 124
+    },
+    "seed": {
+      "type": "int",
+      "required": false,
+      "default": 42
+    },
+    "steps": {
+      "type": "int",
+      "required": false,
+      "default": 20
+    },
+    "denoise": {
+      "type": "float",
+      "required": false,
+      "default": 1
+    },
+    "shift_video": {
+      "type": "int",
+      "required": false,
+      "default": 12
+    },
+    "shift_audio": {
+      "type": "int",
+      "required": false,
+      "default": 3
+    },
+    "latent_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/fl2va_av"
+    },
+    "output_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/fl2va"
+    },
+    "fingerprint": {
+      "type": "string",
+      "required": false,
+      "default": "{}"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "IMAGE"
+    },
+    {
+      "name": "output-1",
+      "type": "IMAGE"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "CLIPLoader",
+      "ConditioningZeroOut",
+      "CreateVideo",
+      "GemmyH3SaveAVLatent",
+      "KSampler",
+      "LoadImage",
+      "MiniMaxH3ImageToVideo",
+      "MiniMaxH3SigmaShift",
+      "SaveVideo",
+      "UNETLoader",
+      "VAEDecode",
+      "VAEDecodeAudio",
+      "VAELoader"
+    ],
+    "nodePacks": [
+      "gemmy-h3-context"
+    ],
+    "models": [
+      {
+        "kind": "model",
+        "name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_video_vae_fp16.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

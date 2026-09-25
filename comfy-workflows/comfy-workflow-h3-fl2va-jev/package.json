@@ -1,0 +1,34 @@
+{
+  "name": "@stepupgaming/comfy-workflow-h3-fl2va-jev",
+  "version": "0.1.0",
+  "description": "Opt-in 009jev native SLA on H3 first-frame I2V. Gemmy `video h3 generate --jev`.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "comfy-workflow",
+    "comfyui",
+    "comfy-workflows"
+  ],
+  "comfyWorkflow": "./comfy.workflow.json",
+  "files": [
+    "README.md",
+    "ir.build.ts",
+    "prompt.template.json",
+    "workflow.ir.json",
+    "comfy.workflow.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@stepupgaming/comfy-workflows": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stepupgaming/gemmy.git",
+    "directory": "comfy-workflows/comfy-workflow-h3-fl2va-jev"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

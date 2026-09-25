@@ -1,0 +1,99 @@
+{
+  "id": "670c65bc-9c1c-4f85-bb73-5af45b6f6d78",
+  "revision": 0,
+  "last_node_id": 3,
+  "last_link_id": 2,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MiniMaxH3MusicStudio",
+      "pos": [80, 80],
+      "size": [610, 1050],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {"name": "audio", "type": "AUDIO", "links": [1, 2]},
+        {"name": "generated_prompt", "type": "STRING", "links": null},
+        {"name": "effective_duration", "type": "FLOAT", "links": null},
+        {"name": "section_plan", "type": "STRING", "links": null}
+      ],
+      "properties": {
+        "Node name for S&R": "MiniMaxH3MusicStudio"
+      },
+      "widgets_values": [
+        "song",
+        "Custom",
+        60.0,
+        20,
+        1234,
+        "fixed",
+        "A wry, slow, swaggering acoustic blues-country novelty song around 88 BPM, dryly funny but emotionally sincere, with restrained verses and a memorable singalong chorus; the arrangement stays coherent and small for the full take",
+        "Fingerpicked resonator guitar, warm upright bass, compact brushed drum kit, occasional muted electric-guitar answers, and nothing else; no choir, no backing singers, no synths, and no orchestral build",
+        "one expressive adult female singer with a warm weathered contralto, dry comic timing, clear natural English diction, subtle rasp, and professional connected phrasing",
+        "[Intro]\n\n[Verse 1]\nI've been sitting on this shelf since nineteen seventy-five\nGot two googly eyes and no good reason to be alive\nShe said I was solid, she said I was sweet\nThen she left me for a geode from across the street\n\n[Chorus]\nI'm a pet rock, honey, and I ain't got no game\nJust a lump in a cardboard box that nobody came to claim\nGot no arms to hold you, got no lips to kiss\nJust a hundred million years of loneliness\n\n[Bridge]\nThey call me low maintenance like that makes it okay\nA hundred million years and nobody knows my name\n\n[Outro]",
+        "a dry intimate live room with one performer and a small band recorded in one continuous take",
+        "A dry intimate live-room recording with faint chair movement and natural instrument handling, but no spoken introduction and no audience",
+        "English",
+        "32",
+        "res_multistep",
+        "simple",
+        "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "minimax_h3_video_vae_fp16.safetensors",
+        "minimax_h3_audio_vae_fp32.safetensors",
+        "auto",
+        "natural_song_sheet_v2"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "PreviewAudio",
+      "pos": [800, 120],
+      "size": [360, 130],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {"name": "audio", "type": "AUDIO", "link": 1}
+      ],
+      "outputs": [
+        {"name": "AUDIO", "type": "AUDIO", "links": null}
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 3,
+      "type": "SaveAudio",
+      "pos": [800, 330],
+      "size": [360, 150],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {"name": "audio", "type": "AUDIO", "link": 2}
+      ],
+      "outputs": [
+        {"name": "AUDIO", "type": "AUDIO", "links": null}
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": ["music/H3_Music_Studio"]
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 0, "AUDIO"],
+    [2, 1, 0, 3, 0, "AUDIO"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {"scale": 0.78, "offset": [220, 90]}
+  },
+  "version": 0.4
+}

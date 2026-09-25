@@ -1,0 +1,90 @@
+[project]
+name = "minimax-h3"
+version = "0.1.0"
+description = "MiniMax H3 audio-video DiT — Candle runtime + PyTorch reference (minimax_h3)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch>=2.13.0",
+    "safetensors>=0.4.0",
+    "numpy>=1.26",
+    # Windows: woct0rdho SA2 CUDA wheel (fp8 path used on sm120 / 5060 Ti).
+    # Non-Windows: PyPI sageattention (SA1 or platform wheel).
+    "sageattention>=1.0.6",
+    # Real FlashAttention-2 HQ path (--attn fa2). Official Dao/PyPI has no Windows
+    # wheels; owner box uses the same community cu130 cp312 wheel as gemmy
+    # locate-anything-la-flash. Linux can use a normal flash-attn build if present.
+    "flash-attn>=2.8.3; sys_platform == 'win32'",
+    "pillow>=10.0",
+    "imageio>=2.34",
+    "imageio-ffmpeg>=0.5",
+    # SageAttention imports triton; upstream triton has no win_amd64 wheels.
+    "triton-windows>=3.7.0; sys_platform == 'win32'",
+    "triton>=3.0.0; sys_platform != 'win32'",
+    # VAE decode path (scripts/h3_vae_decode.py + official MiniMax VAE sources)
+    "diffusers>=0.30.0",
+    "scipy>=1.11",
+    "torchvision>=0.20.0",
+    "torchaudio>=2.5.0",
+    "einops>=0.7.0",
+    # Qwen tokenizer for h3_text_encode.py
+    "transformers>=4.50.3",
+    # Comfy engine pack (runtimes/minimax-h3/ComfyUI headless runner + nodes)
+    "psutil>=5.9",
+    "aiohttp>=3.11.8",
+    "yarl>=1.18.0",
+    "alembic>=1.13",
+    "SQLAlchemy>=2.0",
+    "av>=17.0.0",
+    "pydantic~=2.0",
+    "pydantic-settings~=2.0",
+    "simpleeval>=1.0.0",
+    "blake3",
+    "kornia>=0.7.1",
+    "spandrel",
+    "requests",
+    "torchsde",
+    "comfy-kitchen==0.2.34",
+    "comfy-aimdo==0.5.3",
+    "comfyui-frontend-package==1.52.7",
+    "ultralytics>=8.4.123",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+minimax-h3-py = "minimax_h3.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["minimax_h3"]
+
+[tool.uv]
+package = true
+
+# PyTorch CUDA 13.0 wheels (matches owner-box torch 2.13+cu130).
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu130" }
+torchvision = { index = "pytorch-cu130" }
+torchaudio = { index = "pytorch-cu130" }
+# SA2 CUDA kernels (sm80/89/90 pyds). auto dispatcher routes sm120 → fp8 CUDA.
+# Plain PyPI sageattention is SA1 Triton-only and has no named SA2 backends.
+sageattention = { url = "https://github.com/woct0rdho/SageAttention/releases/download/v2.2.0-windows.post6/sageattention-2.2.0+cu130torch2.10.0andhigher.post6-cp310-abi3-win_amd64.whl", marker = "sys_platform == 'win32'" }
+# FA2 HQ on Windows (Dao has no win wheels). Tag says torch2.11; verified on
+# owner torch 2.13.0+cu130 / sm120. Same pin family as gemmy la-flash runtime.
+flash-attn = { url = "https://huggingface.co/Sumitc13/flash-attn-windows-wheels/resolve/b5fd8d0b0d3255498d6ec0d5640701d2dfa682f9/flash_attn-2.8.3%2Bcu130torch2.11-cp312-cp312-win_amd64.whl", marker = "sys_platform == 'win32'" }
+
+[tool.pytest.ini_options]
+testpaths = ["minimax_h3/tests"]
+pythonpath = ["."]

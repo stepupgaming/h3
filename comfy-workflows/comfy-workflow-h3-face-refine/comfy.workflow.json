@@ -1,0 +1,105 @@
+{
+  "specVersion": 1,
+  "name": "comfy-workflow-h3-face-refine",
+  "title": "H3 Face Refine",
+  "entry": "./workflow.ir.json",
+  "description": "Track/crop faces, H3 denoise 0.35, stitch back. Gemmy `video h3 face-refine`.",
+  "parameters": {
+    "video": {
+      "type": "string",
+      "required": true
+    },
+    "detector": {
+      "type": "string",
+      "required": false,
+      "default": "face_yolov8m.pt"
+    },
+    "unet": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
+    },
+    "clip": {
+      "type": "string",
+      "required": false,
+      "default": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors"
+    },
+    "video_vae": {
+      "type": "string",
+      "required": false,
+      "default": "minimax_h3_video_vae_fp16.safetensors"
+    },
+    "prompt": {
+      "type": "string",
+      "required": true
+    },
+    "length": {
+      "type": "int",
+      "required": false,
+      "default": 124
+    },
+    "seed": {
+      "type": "int",
+      "required": false,
+      "default": 42
+    },
+    "steps": {
+      "type": "int",
+      "required": false,
+      "default": 8
+    },
+    "denoise": {
+      "type": "float",
+      "required": false,
+      "default": 0.35
+    },
+    "output_prefix": {
+      "type": "string",
+      "required": false,
+      "default": "h3/face"
+    }
+  },
+  "outputs": [
+    {
+      "name": "output-0",
+      "type": "IMAGE"
+    }
+  ],
+  "requires": {
+    "nodeClasses": [
+      "CLIPLoader",
+      "ConditioningZeroOut",
+      "CreateVideo",
+      "GetVideoComponents",
+      "H3FaceStitch",
+      "H3FaceTrackCrop",
+      "H3InjectVideoLatent",
+      "KSampler",
+      "LoadVideo",
+      "MiniMaxH3ImageToVideo",
+      "MiniMaxH3SigmaShift",
+      "SaveVideo",
+      "UNETLoader",
+      "VAEDecode",
+      "VAELoader"
+    ],
+    "nodePacks": [
+      "ComfyUI-H3-FaceRefine"
+    ],
+    "models": [
+      {
+        "kind": "model",
+        "name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors"
+      },
+      {
+        "kind": "model",
+        "name": "minimax_h3_video_vae_fp16.safetensors"
+      }
+    ]
+  },
+  "coreVersion": "^0.2.0"
+}

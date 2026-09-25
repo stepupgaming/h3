@@ -1,0 +1,34 @@
+{
+  "name": "@stepupgaming/comfy-workflow-h3-ganloss-stage1-still-audio",
+  "version": "0.1.0",
+  "description": "Eros still-only stage 1 with one live audio ref. Gemmy `video h3 generate --mode ref2va --ref-image --ref-audio`.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "comfy-workflow",
+    "comfyui",
+    "comfy-workflows"
+  ],
+  "comfyWorkflow": "./comfy.workflow.json",
+  "files": [
+    "README.md",
+    "ir.build.ts",
+    "workflow.ir.json",
+    "comfy.workflow.json",
+    "prompt.template.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@stepupgaming/comfy-workflows": "^0.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stepupgaming/gemmy.git",
+    "directory": "comfy-workflows/comfy-workflow-h3-ganloss-stage1-still-audio"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,90 @@
+# H3 Masked-AV Continue (FL2VA)
+
+Continue an H3 clip from a persisted AV latent plus first frame. Gemmy continue/loop.
+
+Unofficial project. Not affiliated with or endorsed by Comfy Org.
+
+## Purpose
+
+Extend a previous H3 generation with masked AV context.
+
+AUTHORING SOURCE: `ir.build.ts`.
+GENERATED: `workflow.ir.json`, `comfy.workflow.json`, `prompt.template.json` — do not hand-edit.
+Rebuild with `pnpm comfy:build` from `comfy-workflows/`.
+Gemmy runtime binds `prompt.template.json` (Python, no Node).
+
+## Install
+
+```sh
+pnpm add @stepupgaming/comfy-workflow-h3-continue
+```
+
+## Required parameters
+
+- `first_image`
+- `context_latent`
+- `prompt`
+
+## Optional parameters
+
+- `unet` (default "minimax_h3_fl2va_pruned_int8_convrot.safetensors")
+- `clip` (default "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors")
+- `video_vae` (default "minimax_h3_video_vae_fp16.safetensors")
+- `audio_vae` (default "minimax_h3_audio_vae_fp32.safetensors")
+- `context_frames` (default 39)
+- `width` (default 864)
+- `height` (default 480)
+- `length` (default 124)
+- `seed` (default 42)
+- `steps` (default 20)
+- `denoise` (default 1)
+- `shift_video` (default 12)
+- `shift_audio` (default 3)
+- `latent_prefix` (default "h3/continue_av")
+- `output_prefix` (default "h3/continue")
+- `fingerprint` (default "{}")
+
+## Custom node packs
+
+- `gemmy-h3-context`
+
+## Node classes
+
+- `CLIPLoader`
+- `ConditioningZeroOut`
+- `CreateVideo`
+- `GemmyH3LoadAVLatent`
+- `GemmyH3MaskedAVContext`
+- `GemmyH3SaveAVLatent`
+- `GemmyH3TrimProtectedPrefix`
+- `KSampler`
+- `LoadImage`
+- `MiniMaxH3ImageToVideo`
+- `MiniMaxH3SigmaShift`
+- `SaveVideo`
+- `UNETLoader`
+- `VAEDecode`
+- `VAEDecodeAudio`
+- `VAELoader`
+
+## Models
+
+- model: `minimax_h3_fl2va_pruned_int8_convrot.safetensors`
+- model: `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`
+- model: `minimax_h3_video_vae_fp16.safetensors`
+- model: `minimax_h3_audio_vae_fp32.safetensors`
+
+Do not publish model binaries. Filenames are defaults from Gemmy's H3/Krea layout; they are not universally available.
+
+## Inspect & run
+
+```sh
+cwf inspect @stepupgaming/comfy-workflow-h3-continue --url http://127.0.0.1:8188
+cwf run @stepupgaming/comfy-workflow-h3-continue --url http://127.0.0.1:8188 --param prompt=...
+```
+
+## License
+
+MIT for this package's Graph IR / scaffolding, owned by Gemmy. Models and third-party custom nodes remain under their own licenses.
+
+Never hand-edit generated workflow JSON.

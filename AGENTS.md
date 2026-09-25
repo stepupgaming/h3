@@ -22,7 +22,7 @@ Native Windows CLI for MiniMax-H3 video. Binary name `h3`.
 - Do not commit `.env`, `ComfyUI/extra_model_paths.yaml`, or `ComfyUI/models`.
 - Use `uv`, never `pip`. Native Windows first.
 - `repo_root()` is `GEMMY_REPO_ROOT` when that variable is set, otherwise the directory that contains `h3.exe` when `runtimes/minimax-h3` is beside it, otherwise the compile-time crate path. `cargo install --path .` keeps the compile-time path. The Windows installer uses the install directory.
-- `.github/workflows/release-windows.yml` builds `installer/h3.iss` on `windows-latest`. A `v*` tag publishes `h3-<version>-windows-x64-setup.exe` to the GitHub Release. `workflow_dispatch` uploads that same installer as an Actions artifact. The installer is per-user, adds `h3` to the user PATH, and does not bundle `.venv`, weights, or the NVIDIA interpolate DLLs.
+- `.github/workflows/release-windows.yml` builds `installer/h3.iss` on `windows-latest`. A `v*` tag publishes `h3-<version>-windows-x64-setup.exe` to the GitHub Release. `workflow_dispatch` uploads that same installer as an Actions artifact. The installer is per-user, adds `h3` to the user PATH, and does not bundle `.venv`, weights, or the NVIDIA interpolate DLLs. The release job runs the install-layout test only. The full `cargo test` suite still expects local weight files.
 
 # Work Guidance
 

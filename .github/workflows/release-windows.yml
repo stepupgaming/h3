@@ -23,8 +23,8 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
 
-      - name: Test
-        run: cargo test --locked
+      - name: Test install layout
+        run: cargo test --locked --bin h3 layout_root_requires_the_engine_directory
 
       - name: Build
         run: cargo build --release --locked
